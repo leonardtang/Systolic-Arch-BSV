@@ -1,0 +1,184 @@
+
+build/reverse32:     file format elf32-littleriscv
+
+
+Disassembly of section .text.init:
+
+00000000 <_start>:
+   0:	00000093          	li	ra,0
+   4:	00000113          	li	sp,0
+   8:	00000193          	li	gp,0
+   c:	00000213          	li	tp,0
+  10:	00000293          	li	t0,0
+  14:	00000313          	li	t1,0
+  18:	00000393          	li	t2,0
+  1c:	00000413          	li	s0,0
+  20:	00000493          	li	s1,0
+  24:	00000513          	li	a0,0
+  28:	00000593          	li	a1,0
+  2c:	00000613          	li	a2,0
+  30:	00000693          	li	a3,0
+  34:	00000713          	li	a4,0
+  38:	00000793          	li	a5,0
+  3c:	00000813          	li	a6,0
+  40:	00000893          	li	a7,0
+  44:	00000913          	li	s2,0
+  48:	00000993          	li	s3,0
+  4c:	00000a13          	li	s4,0
+  50:	00000a93          	li	s5,0
+  54:	00000b13          	li	s6,0
+  58:	00000b93          	li	s7,0
+  5c:	00000c13          	li	s8,0
+  60:	00000c93          	li	s9,0
+  64:	00000d13          	li	s10,0
+  68:	00000d93          	li	s11,0
+  6c:	00000e13          	li	t3,0
+  70:	00000e93          	li	t4,0
+  74:	00000f13          	li	t5,0
+  78:	00000f93          	li	t6,0
+  7c:	10000137          	lui	sp,0x10000
+  80:	ff010113          	addi	sp,sp,-16 # ffffff0 <_end+0xfffdfe4>
+  84:	018010ef          	jal	ra,109c <main>
+  88:	00000513          	li	a0,0
+  8c:	7d9000ef          	jal	ra,1064 <exit>
+  90:	0000006f          	j	90 <_start+0x90>
+
+Disassembly of section .text:
+
+00001000 <getchar>:
+    1000:	ff010113          	addi	sp,sp,-16
+    1004:	00812623          	sw	s0,12(sp)
+    1008:	01010413          	addi	s0,sp,16
+    100c:	00001797          	auipc	a5,0x1
+    1010:	ff878793          	addi	a5,a5,-8 # 2004 <GET_ADDR>
+    1014:	0007a783          	lw	a5,0(a5)
+    1018:	0007a783          	lw	a5,0(a5)
+    101c:	00078513          	mv	a0,a5
+    1020:	00c12403          	lw	s0,12(sp)
+    1024:	01010113          	addi	sp,sp,16
+    1028:	00008067          	ret
+
+0000102c <putchar>:
+    102c:	fe010113          	addi	sp,sp,-32
+    1030:	00812e23          	sw	s0,28(sp)
+    1034:	02010413          	addi	s0,sp,32
+    1038:	fea42623          	sw	a0,-20(s0)
+    103c:	00001797          	auipc	a5,0x1
+    1040:	fc478793          	addi	a5,a5,-60 # 2000 <PUT_ADDR>
+    1044:	0007a783          	lw	a5,0(a5)
+    1048:	fec42703          	lw	a4,-20(s0)
+    104c:	00e7a023          	sw	a4,0(a5)
+    1050:	fec42783          	lw	a5,-20(s0)
+    1054:	00078513          	mv	a0,a5
+    1058:	01c12403          	lw	s0,28(sp)
+    105c:	02010113          	addi	sp,sp,32
+    1060:	00008067          	ret
+
+00001064 <exit>:
+    1064:	fe010113          	addi	sp,sp,-32
+    1068:	00812e23          	sw	s0,28(sp)
+    106c:	02010413          	addi	s0,sp,32
+    1070:	fea42623          	sw	a0,-20(s0)
+    1074:	00001797          	auipc	a5,0x1
+    1078:	f9478793          	addi	a5,a5,-108 # 2008 <FINISH_ADDR>
+    107c:	0007a783          	lw	a5,0(a5)
+    1080:	fec42703          	lw	a4,-20(s0)
+    1084:	00e7a023          	sw	a4,0(a5)
+    1088:	fec42783          	lw	a5,-20(s0)
+    108c:	00078513          	mv	a0,a5
+    1090:	01c12403          	lw	s0,28(sp)
+    1094:	02010113          	addi	sp,sp,32
+    1098:	00008067          	ret
+
+Disassembly of section .text.startup:
+
+0000109c <main>:
+    109c:	ee010113          	addi	sp,sp,-288
+    10a0:	10112e23          	sw	ra,284(sp)
+    10a4:	10812c23          	sw	s0,280(sp)
+    10a8:	10912a23          	sw	s1,276(sp)
+    10ac:	11212823          	sw	s2,272(sp)
+    10b0:	11312623          	sw	s3,268(sp)
+    10b4:	11412423          	sw	s4,264(sp)
+    10b8:	11512223          	sw	s5,260(sp)
+    10bc:	f45ff0ef          	jal	ra,1000 <getchar>
+    10c0:	fff00793          	li	a5,-1
+    10c4:	04f50c63          	beq	a0,a5,111c <main+0x80>
+    10c8:	00010a93          	mv	s5,sp
+    10cc:	00100913          	li	s2,1
+    10d0:	10010a13          	addi	s4,sp,256
+    10d4:	000a8413          	mv	s0,s5
+    10d8:	41590933          	sub	s2,s2,s5
+    10dc:	fff00993          	li	s3,-1
+    10e0:	0080006f          	j	10e8 <main+0x4c>
+    10e4:	07440463          	beq	s0,s4,114c <main+0xb0>
+    10e8:	0ff57493          	andi	s1,a0,255
+    10ec:	00940023          	sb	s1,0(s0)
+    10f0:	f11ff0ef          	jal	ra,1000 <getchar>
+    10f4:	008907b3          	add	a5,s2,s0
+    10f8:	00140413          	addi	s0,s0,1
+    10fc:	ff3514e3          	bne	a0,s3,10e4 <main+0x48>
+    1100:	00fa8433          	add	s0,s5,a5
+    1104:	0080006f          	j	110c <main+0x70>
+    1108:	fff44483          	lbu	s1,-1(s0)
+    110c:	fff40413          	addi	s0,s0,-1
+    1110:	00048513          	mv	a0,s1
+    1114:	f19ff0ef          	jal	ra,102c <putchar>
+    1118:	fe8a98e3          	bne	s5,s0,1108 <main+0x6c>
+    111c:	00a00513          	li	a0,10
+    1120:	f0dff0ef          	jal	ra,102c <putchar>
+    1124:	11c12083          	lw	ra,284(sp)
+    1128:	11812403          	lw	s0,280(sp)
+    112c:	11412483          	lw	s1,276(sp)
+    1130:	11012903          	lw	s2,272(sp)
+    1134:	10c12983          	lw	s3,268(sp)
+    1138:	10812a03          	lw	s4,264(sp)
+    113c:	10412a83          	lw	s5,260(sp)
+    1140:	00000513          	li	a0,0
+    1144:	12010113          	addi	sp,sp,288
+    1148:	00008067          	ret
+    114c:	0ff14483          	lbu	s1,255(sp)
+    1150:	10000793          	li	a5,256
+    1154:	fadff06f          	j	1100 <main+0x64>
+
+Disassembly of section .sdata:
+
+00002000 <PUT_ADDR>:
+    2000:	fff0                	fsw	fa2,124(a5)
+    2002:	f000                	fsw	fs0,32(s0)
+
+00002004 <GET_ADDR>:
+    2004:	fff4                	fsw	fa3,124(a5)
+    2006:	f000                	fsw	fs0,32(s0)
+
+00002008 <FINISH_ADDR>:
+    2008:	fff8                	fsw	fa4,124(a5)
+    200a:	f000                	fsw	fs0,32(s0)
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347          	fmsub.d	ft6,ft6,ft4,ft7,rmm
+   4:	2820                	fld	fs0,80(s0)
+   6:	2029                	jal	10 <_start+0x10>
+   8:	3031                	jal	fffff814 <_end+0xffffd808>
+   a:	322e                	fld	ft4,232(sp)
+   c:	302e                	fld	ft0,232(sp)
+	...
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	1b41                	addi	s6,s6,-16
+   2:	0000                	unimp
+   4:	7200                	flw	fs0,32(a2)
+   6:	7369                	lui	t1,0xffffa
+   8:	01007663          	bgeu	zero,a6,14 <_start+0x14>
+   c:	0011                	c.nop	4
+   e:	0000                	unimp
+  10:	1004                	addi	s1,sp,32
+  12:	7205                	lui	tp,0xfffe1
+  14:	3376                	fld	ft6,376(sp)
+  16:	6932                	flw	fs2,12(sp)
+  18:	7032                	flw	ft0,44(sp)
+  1a:	0030                	addi	a2,sp,8

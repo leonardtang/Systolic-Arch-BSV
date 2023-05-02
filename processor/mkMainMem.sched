@@ -1,0 +1,267 @@
+=== Generated schedule for mkMainMem ===
+
+Method schedule
+---------------
+Method: put
+Ready signal: bram_serverAdapter_cnt .< 3'd3
+Conflict-free: get
+Conflicts: put
+ 
+Method: get
+Ready signal: dl_d_39_rv.port0__read[512]
+Conflict-free: put
+Conflicts: get
+ 
+Rule schedule
+-------------
+Rule: bram_serverAdapter_outData_enqueue
+Predicate: bram_serverAdapter_outData_enqw.whas &&
+	   ((! bram_serverAdapter_outData_dequeueing.whas) ||
+	    bram_serverAdapter_outData_ff.i_notEmpty)
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapter_outData_dequeue
+Predicate: bram_serverAdapter_outData_dequeueing.whas &&
+	   bram_serverAdapter_outData_ff.i_notEmpty
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapter_cnt_finalAdd
+Predicate: bram_serverAdapter_cnt_1.whas || bram_serverAdapter_cnt_2.whas ||
+	   bram_serverAdapter_cnt_3.whas
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapter_s1__dreg_update
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapter_stageReadResponseAlways
+Predicate: bram_serverAdapter_writeWithResp.whas
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapter_moveToOutFIFO
+Predicate: ((! bram_serverAdapter_s1[0]) ||
+	    bram_serverAdapter_outData_ff.i_notFull) &&
+	   bram_serverAdapter_s1[1]
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapter_overRun
+Predicate: bram_serverAdapter_s1[1] &&
+	   ((! bram_serverAdapter_outData_beforeEnq.read) ||
+	    (! bram_serverAdapter_outData_beforeDeq.read) ||
+	    (! bram_serverAdapter_outData_ff.i_notFull))
+Blocking rules: (none)
+ 
+Rule: dl_try_move
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_1
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_2
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_3
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_4
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_5
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_6
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_7
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_8
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_9
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_10
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_11
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_12
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_13
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_14
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_15
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_16
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_17
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_18
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_19
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_20
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_21
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_22
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_23
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_24
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_25
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_26
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_27
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_28
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_29
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_30
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_31
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_32
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_33
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_34
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_35
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_36
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_37
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_38
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: deq
+Predicate: bram_serverAdapter_outData_beforeDeq.read &&
+	   (bram_serverAdapter_outData_ff.i_notEmpty ||
+	    bram_serverAdapter_outData_enqw.whas) &&
+	   (! dl_d_0_rv.port1__read[512])
+Blocking rules: (none)
+ 
+Logical execution order: put,
+			 get,
+			 bram_serverAdapter_stageReadResponseAlways,
+			 bram_serverAdapter_overRun,
+			 bram_serverAdapter_moveToOutFIFO,
+			 bram_serverAdapter_s1__dreg_update,
+			 dl_try_move,
+			 dl_try_move_1,
+			 dl_try_move_2,
+			 dl_try_move_3,
+			 dl_try_move_4,
+			 dl_try_move_5,
+			 dl_try_move_6,
+			 dl_try_move_7,
+			 dl_try_move_8,
+			 dl_try_move_9,
+			 dl_try_move_10,
+			 dl_try_move_11,
+			 dl_try_move_12,
+			 dl_try_move_13,
+			 dl_try_move_14,
+			 dl_try_move_15,
+			 dl_try_move_16,
+			 dl_try_move_17,
+			 dl_try_move_18,
+			 dl_try_move_19,
+			 dl_try_move_20,
+			 dl_try_move_21,
+			 dl_try_move_22,
+			 dl_try_move_23,
+			 dl_try_move_24,
+			 dl_try_move_25,
+			 dl_try_move_26,
+			 dl_try_move_27,
+			 dl_try_move_28,
+			 dl_try_move_29,
+			 dl_try_move_30,
+			 dl_try_move_31,
+			 dl_try_move_32,
+			 dl_try_move_33,
+			 dl_try_move_34,
+			 dl_try_move_35,
+			 dl_try_move_36,
+			 dl_try_move_37,
+			 dl_try_move_38,
+			 deq,
+			 bram_serverAdapter_outData_enqueue,
+			 bram_serverAdapter_outData_dequeue,
+			 bram_serverAdapter_cnt_finalAdd
+
+=========================================

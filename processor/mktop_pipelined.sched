@@ -1,0 +1,135 @@
+=== Generated schedule for mktop_pipelined ===
+
+Rule schedule
+-------------
+Rule: bram_serverAdapterA_outData_enqueue
+Predicate: bram_serverAdapterA_outData_enqw.whas &&
+	   ((! bram_serverAdapterA_outData_dequeueing.whas) ||
+	    bram_serverAdapterA_outData_ff.i_notEmpty)
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterA_outData_dequeue
+Predicate: bram_serverAdapterA_outData_dequeueing.whas &&
+	   bram_serverAdapterA_outData_ff.i_notEmpty
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterA_cnt_finalAdd
+Predicate: bram_serverAdapterA_cnt_1.whas || bram_serverAdapterA_cnt_2.whas ||
+	   bram_serverAdapterA_cnt_3.whas
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterA_s1__dreg_update
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterA_stageReadResponseAlways
+Predicate: bram_serverAdapterA_writeWithResp.whas
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterA_moveToOutFIFO
+Predicate: ((! bram_serverAdapterA_s1[0]) ||
+	    bram_serverAdapterA_outData_ff.i_notFull) &&
+	   bram_serverAdapterA_s1[1]
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterA_overRun
+Predicate: bram_serverAdapterA_s1[1] &&
+	   ((! bram_serverAdapterA_outData_beforeEnq.read) ||
+	    (! bram_serverAdapterA_outData_beforeDeq.read) ||
+	    (! bram_serverAdapterA_outData_ff.i_notFull))
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterB_outData_enqueue
+Predicate: bram_serverAdapterB_outData_enqw.whas &&
+	   ((! bram_serverAdapterB_outData_dequeueing.whas) ||
+	    bram_serverAdapterB_outData_ff.i_notEmpty)
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterB_outData_dequeue
+Predicate: bram_serverAdapterB_outData_dequeueing.whas &&
+	   bram_serverAdapterB_outData_ff.i_notEmpty
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterB_cnt_finalAdd
+Predicate: bram_serverAdapterB_cnt_1.whas || bram_serverAdapterB_cnt_2.whas ||
+	   bram_serverAdapterB_cnt_3.whas
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterB_s1__dreg_update
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterB_stageReadResponseAlways
+Predicate: bram_serverAdapterB_writeWithResp.whas
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterB_moveToOutFIFO
+Predicate: ((! bram_serverAdapterB_s1[0]) ||
+	    bram_serverAdapterB_outData_ff.i_notFull) &&
+	   bram_serverAdapterB_s1[1]
+Blocking rules: (none)
+ 
+Rule: bram_serverAdapterB_overRun
+Predicate: bram_serverAdapterB_s1[1] &&
+	   ((! bram_serverAdapterB_outData_beforeEnq.read) ||
+	    (! bram_serverAdapterB_outData_beforeDeq.read) ||
+	    (! bram_serverAdapterB_outData_ff.i_notFull))
+Blocking rules: (none)
+ 
+Rule: tic
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: requestI
+Predicate: rv_core.RDY_getIReq && (bram_serverAdapterB_cnt .< 3'd3)
+Blocking rules: (none)
+ 
+Rule: responseI
+Predicate: bram_serverAdapterB_outData_beforeDeq.read &&
+	   (bram_serverAdapterB_outData_ff.i_notEmpty ||
+	    bram_serverAdapterB_outData_enqw.whas) &&
+	   rv_core.RDY_getIResp
+Blocking rules: (none)
+ 
+Rule: requestD
+Predicate: rv_core.RDY_getDReq && (bram_serverAdapterA_cnt .< 3'd3)
+Blocking rules: (none)
+ 
+Rule: responseD
+Predicate: bram_serverAdapterA_outData_beforeDeq.read &&
+	   (bram_serverAdapterA_outData_ff.i_notEmpty ||
+	    bram_serverAdapterA_outData_enqw.whas) &&
+	   rv_core.RDY_getDResp
+Blocking rules: (none)
+ 
+Rule: requestMMIO
+Predicate: rv_core.RDY_getMMIOReq && mmioreq.i_notFull
+Blocking rules: (none)
+ 
+Rule: responseMMIO
+Predicate: rv_core.RDY_getMMIOResp && mmioreq.i_notEmpty
+Blocking rules: (none)
+ 
+Logical execution order: tic,
+			 responseMMIO,
+			 bram_serverAdapterA_overRun,
+			 bram_serverAdapterA_moveToOutFIFO,
+			 responseD,
+			 requestD,
+			 requestMMIO,
+			 bram_serverAdapterA_stageReadResponseAlways,
+			 bram_serverAdapterA_outData_enqueue,
+			 bram_serverAdapterA_outData_dequeue,
+			 bram_serverAdapterA_cnt_finalAdd,
+			 bram_serverAdapterA_s1__dreg_update,
+			 bram_serverAdapterB_overRun,
+			 bram_serverAdapterB_moveToOutFIFO,
+			 responseI,
+			 requestI,
+			 bram_serverAdapterB_stageReadResponseAlways,
+			 bram_serverAdapterB_outData_enqueue,
+			 bram_serverAdapterB_outData_dequeue,
+			 bram_serverAdapterB_cnt_finalAdd,
+			 bram_serverAdapterB_s1__dreg_update
+
+===============================================

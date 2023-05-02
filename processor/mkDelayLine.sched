@@ -1,0 +1,116 @@
+=== Generated schedule for mkDelayLine ===
+
+Rule schedule
+-------------
+Rule: dl_try_move
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_1
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_2
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_3
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_4
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_5
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_6
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_7
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_8
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_9
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_10
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_11
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_12
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_13
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_14
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_15
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_16
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_17
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dl_try_move_18
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: tic
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: feed
+Predicate: (! dl_d_0_rv.port1__read[10]) && (cnt_f < 10'd10)
+Blocking rules: (none)
+ 
+Rule: stream
+Predicate: dl_d_19_rv.port0__read[10]
+Blocking rules: (none)
+ 
+Logical execution order: tic,
+			 stream,
+			 dl_try_move,
+			 dl_try_move_1,
+			 dl_try_move_2,
+			 dl_try_move_3,
+			 dl_try_move_4,
+			 dl_try_move_5,
+			 dl_try_move_6,
+			 dl_try_move_7,
+			 dl_try_move_8,
+			 dl_try_move_9,
+			 dl_try_move_10,
+			 dl_try_move_11,
+			 dl_try_move_12,
+			 dl_try_move_13,
+			 dl_try_move_14,
+			 dl_try_move_15,
+			 dl_try_move_16,
+			 dl_try_move_17,
+			 dl_try_move_18,
+			 feed
+
+===========================================
