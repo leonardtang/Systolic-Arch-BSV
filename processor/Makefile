@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := all
 BUILD_DIR=build
-BINARY_NAME=top_bsv top_pipelined DelayLine MainMem
+BINARY_NAME=top_bsv top_pipelined Cache DelayLine MainMem
 BSC_FLAGS=--aggressive-conditions --show-schedule -vdir $(BUILD_DIR) -bdir $(BUILD_DIR) -simdir $(BUILD_DIR) -o 
 
 .PHONY: clean all $(BINARY_NAME)

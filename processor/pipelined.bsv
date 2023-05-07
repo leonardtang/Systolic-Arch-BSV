@@ -231,7 +231,7 @@ module mkpipelined(RVIfc);
                     labelKonataLeft(lfh, current_id, $format(" Squashed: %x %x", rd_idx, scoreboard[rd_idx][1]));
                 end
             end 
-		end
+		end 
         // Similarly, to register an execute event for an instruction:
     	//	executeKonata(lfh, k_id);
     	// where k_id is the unique konata identifier that has been passed around that came from the fetch stage
@@ -292,6 +292,12 @@ module mkpipelined(RVIfc);
                 labelKonataLeft(lfh, current_id, $format(" Scoreboard: %x %x", rd_idx, scoreboard[rd_idx][0]));
                 scoreboard[rd_idx][0] <= scoreboard[rd_idx][0] - 1;
             end
+            if (x.nextEp != epoch[0]) begin
+                pcF[0] <= x.nextPc;
+            end
+            epoch[0] <= x.nextEp;
+        end else begin
+            labelKonataLeft(lfh, current_id, $format(" Epoch %x %x %x", x.nextEp, epoch[0], x.k_id));
             if (x.nextEp != epoch[0]) begin
                 pcF[0] <= x.nextPc;
             end

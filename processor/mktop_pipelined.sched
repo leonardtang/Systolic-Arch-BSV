@@ -76,30 +76,2004 @@ Predicate: bram_serverAdapterB_s1[1] &&
 	    (! bram_serverAdapterB_outData_ff.i_notFull))
 Blocking rules: (none)
  
+Rule: cache_cache_serverAdapterA_outData_enqueue
+Predicate: cache_cache_serverAdapterA_outData_enqw.whas &&
+	   ((! cache_cache_serverAdapterA_outData_dequeueing.whas) ||
+	    cache_cache_serverAdapterA_outData_ff.i_notEmpty)
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterA_outData_dequeue
+Predicate: cache_cache_serverAdapterA_outData_dequeueing.whas &&
+	   cache_cache_serverAdapterA_outData_ff.i_notEmpty
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterA_cnt_finalAdd
+Predicate: cache_cache_serverAdapterA_cnt_1.whas ||
+	   cache_cache_serverAdapterA_cnt_2.whas ||
+	   cache_cache_serverAdapterA_cnt_3.whas
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterA_s1__dreg_update
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterA_stageReadResponseAlways
+Predicate: cache_cache_serverAdapterA_writeWithResp.whas
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterA_moveToOutFIFO
+Predicate: ((! cache_cache_serverAdapterA_s1[0]) ||
+	    cache_cache_serverAdapterA_outData_ff.i_notFull) &&
+	   cache_cache_serverAdapterA_s1[1]
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterA_overRun
+Predicate: cache_cache_serverAdapterA_s1[1] &&
+	   ((! cache_cache_serverAdapterA_outData_beforeEnq.read) ||
+	    (! cache_cache_serverAdapterA_outData_beforeDeq.read) ||
+	    (! cache_cache_serverAdapterA_outData_ff.i_notFull))
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterB_outData_enqueue
+Predicate: cache_cache_serverAdapterB_outData_enqw.whas &&
+	   ((! cache_cache_serverAdapterB_outData_dequeueing.whas) ||
+	    cache_cache_serverAdapterB_outData_ff.i_notEmpty)
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterB_outData_dequeue
+Predicate: cache_cache_serverAdapterB_outData_dequeueing.whas &&
+	   cache_cache_serverAdapterB_outData_ff.i_notEmpty
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterB_cnt_finalAdd
+Predicate: cache_cache_serverAdapterB_cnt_1.whas ||
+	   cache_cache_serverAdapterB_cnt_2.whas ||
+	   cache_cache_serverAdapterB_cnt_3.whas
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterB_s1__dreg_update
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterB_stageReadResponseAlways
+Predicate: cache_cache_serverAdapterB_writeWithResp.whas
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterB_moveToOutFIFO
+Predicate: ((! cache_cache_serverAdapterB_s1[0]) ||
+	    cache_cache_serverAdapterB_outData_ff.i_notFull) &&
+	   cache_cache_serverAdapterB_s1[1]
+Blocking rules: (none)
+ 
+Rule: cache_cache_serverAdapterB_overRun
+Predicate: cache_cache_serverAdapterB_s1[1] &&
+	   ((! cache_cache_serverAdapterB_outData_beforeEnq.read) ||
+	    (! cache_cache_serverAdapterB_outData_beforeDeq.read) ||
+	    (! cache_cache_serverAdapterB_outData_ff.i_notFull))
+Blocking rules: (none)
+ 
+Rule: cache_lockL1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: cache_startMiss
+Predicate: (((PrimArrayDynSelect (PrimBuildArray cache_tagArray_0
+						 cache_tagArray_1
+						 cache_tagArray_2
+						 cache_tagArray_3
+						 cache_tagArray_4
+						 cache_tagArray_5
+						 cache_tagArray_6
+						 cache_tagArray_7
+						 cache_tagArray_8
+						 cache_tagArray_9
+						 cache_tagArray_10
+						 cache_tagArray_11
+						 cache_tagArray_12
+						 cache_tagArray_13
+						 cache_tagArray_14
+						 cache_tagArray_15
+						 cache_tagArray_16
+						 cache_tagArray_17
+						 cache_tagArray_18
+						 cache_tagArray_19
+						 cache_tagArray_20
+						 cache_tagArray_21
+						 cache_tagArray_22
+						 cache_tagArray_23
+						 cache_tagArray_24
+						 cache_tagArray_25
+						 cache_tagArray_26
+						 cache_tagArray_27
+						 cache_tagArray_28
+						 cache_tagArray_29
+						 cache_tagArray_30
+						 cache_tagArray_31
+						 cache_tagArray_32
+						 cache_tagArray_33
+						 cache_tagArray_34
+						 cache_tagArray_35
+						 cache_tagArray_36
+						 cache_tagArray_37
+						 cache_tagArray_38
+						 cache_tagArray_39
+						 cache_tagArray_40
+						 cache_tagArray_41
+						 cache_tagArray_42
+						 cache_tagArray_43
+						 cache_tagArray_44
+						 cache_tagArray_45
+						 cache_tagArray_46
+						 cache_tagArray_47
+						 cache_tagArray_48
+						 cache_tagArray_49
+						 cache_tagArray_50
+						 cache_tagArray_51
+						 cache_tagArray_52
+						 cache_tagArray_53
+						 cache_tagArray_54
+						 cache_tagArray_55
+						 cache_tagArray_56
+						 cache_tagArray_57
+						 cache_tagArray_58
+						 cache_tagArray_59
+						 cache_tagArray_60
+						 cache_tagArray_61
+						 cache_tagArray_62
+						 cache_tagArray_63
+						 cache_tagArray_64
+						 cache_tagArray_65
+						 cache_tagArray_66
+						 cache_tagArray_67
+						 cache_tagArray_68
+						 cache_tagArray_69
+						 cache_tagArray_70
+						 cache_tagArray_71
+						 cache_tagArray_72
+						 cache_tagArray_73
+						 cache_tagArray_74
+						 cache_tagArray_75
+						 cache_tagArray_76
+						 cache_tagArray_77
+						 cache_tagArray_78
+						 cache_tagArray_79
+						 cache_tagArray_80
+						 cache_tagArray_81
+						 cache_tagArray_82
+						 cache_tagArray_83
+						 cache_tagArray_84
+						 cache_tagArray_85
+						 cache_tagArray_86
+						 cache_tagArray_87
+						 cache_tagArray_88
+						 cache_tagArray_89
+						 cache_tagArray_90
+						 cache_tagArray_91
+						 cache_tagArray_92
+						 cache_tagArray_93
+						 cache_tagArray_94
+						 cache_tagArray_95
+						 cache_tagArray_96
+						 cache_tagArray_97
+						 cache_tagArray_98
+						 cache_tagArray_99
+						 cache_tagArray_100
+						 cache_tagArray_101
+						 cache_tagArray_102
+						 cache_tagArray_103
+						 cache_tagArray_104
+						 cache_tagArray_105
+						 cache_tagArray_106
+						 cache_tagArray_107
+						 cache_tagArray_108
+						 cache_tagArray_109
+						 cache_tagArray_110
+						 cache_tagArray_111
+						 cache_tagArray_112
+						 cache_tagArray_113
+						 cache_tagArray_114
+						 cache_tagArray_115
+						 cache_tagArray_116
+						 cache_tagArray_117
+						 cache_tagArray_118
+						 cache_tagArray_119
+						 cache_tagArray_120
+						 cache_tagArray_121
+						 cache_tagArray_122
+						 cache_tagArray_123
+						 cache_tagArray_124
+						 cache_tagArray_125
+						 cache_tagArray_126
+						 cache_tagArray_127)
+				 {19'd0, cache_missReq[42:36]}) ==
+	     26'd67108863) ||
+	    (! (PrimArrayDynSelect (PrimBuildArray cache_dirtyArray_0
+						   cache_dirtyArray_1
+						   cache_dirtyArray_2
+						   cache_dirtyArray_3
+						   cache_dirtyArray_4
+						   cache_dirtyArray_5
+						   cache_dirtyArray_6
+						   cache_dirtyArray_7
+						   cache_dirtyArray_8
+						   cache_dirtyArray_9
+						   cache_dirtyArray_10
+						   cache_dirtyArray_11
+						   cache_dirtyArray_12
+						   cache_dirtyArray_13
+						   cache_dirtyArray_14
+						   cache_dirtyArray_15
+						   cache_dirtyArray_16
+						   cache_dirtyArray_17
+						   cache_dirtyArray_18
+						   cache_dirtyArray_19
+						   cache_dirtyArray_20
+						   cache_dirtyArray_21
+						   cache_dirtyArray_22
+						   cache_dirtyArray_23
+						   cache_dirtyArray_24
+						   cache_dirtyArray_25
+						   cache_dirtyArray_26
+						   cache_dirtyArray_27
+						   cache_dirtyArray_28
+						   cache_dirtyArray_29
+						   cache_dirtyArray_30
+						   cache_dirtyArray_31
+						   cache_dirtyArray_32
+						   cache_dirtyArray_33
+						   cache_dirtyArray_34
+						   cache_dirtyArray_35
+						   cache_dirtyArray_36
+						   cache_dirtyArray_37
+						   cache_dirtyArray_38
+						   cache_dirtyArray_39
+						   cache_dirtyArray_40
+						   cache_dirtyArray_41
+						   cache_dirtyArray_42
+						   cache_dirtyArray_43
+						   cache_dirtyArray_44
+						   cache_dirtyArray_45
+						   cache_dirtyArray_46
+						   cache_dirtyArray_47
+						   cache_dirtyArray_48
+						   cache_dirtyArray_49
+						   cache_dirtyArray_50
+						   cache_dirtyArray_51
+						   cache_dirtyArray_52
+						   cache_dirtyArray_53
+						   cache_dirtyArray_54
+						   cache_dirtyArray_55
+						   cache_dirtyArray_56
+						   cache_dirtyArray_57
+						   cache_dirtyArray_58
+						   cache_dirtyArray_59
+						   cache_dirtyArray_60
+						   cache_dirtyArray_61
+						   cache_dirtyArray_62
+						   cache_dirtyArray_63
+						   cache_dirtyArray_64
+						   cache_dirtyArray_65
+						   cache_dirtyArray_66
+						   cache_dirtyArray_67
+						   cache_dirtyArray_68
+						   cache_dirtyArray_69
+						   cache_dirtyArray_70
+						   cache_dirtyArray_71
+						   cache_dirtyArray_72
+						   cache_dirtyArray_73
+						   cache_dirtyArray_74
+						   cache_dirtyArray_75
+						   cache_dirtyArray_76
+						   cache_dirtyArray_77
+						   cache_dirtyArray_78
+						   cache_dirtyArray_79
+						   cache_dirtyArray_80
+						   cache_dirtyArray_81
+						   cache_dirtyArray_82
+						   cache_dirtyArray_83
+						   cache_dirtyArray_84
+						   cache_dirtyArray_85
+						   cache_dirtyArray_86
+						   cache_dirtyArray_87
+						   cache_dirtyArray_88
+						   cache_dirtyArray_89
+						   cache_dirtyArray_90
+						   cache_dirtyArray_91
+						   cache_dirtyArray_92
+						   cache_dirtyArray_93
+						   cache_dirtyArray_94
+						   cache_dirtyArray_95
+						   cache_dirtyArray_96
+						   cache_dirtyArray_97
+						   cache_dirtyArray_98
+						   cache_dirtyArray_99
+						   cache_dirtyArray_100
+						   cache_dirtyArray_101
+						   cache_dirtyArray_102
+						   cache_dirtyArray_103
+						   cache_dirtyArray_104
+						   cache_dirtyArray_105
+						   cache_dirtyArray_106
+						   cache_dirtyArray_107
+						   cache_dirtyArray_108
+						   cache_dirtyArray_109
+						   cache_dirtyArray_110
+						   cache_dirtyArray_111
+						   cache_dirtyArray_112
+						   cache_dirtyArray_113
+						   cache_dirtyArray_114
+						   cache_dirtyArray_115
+						   cache_dirtyArray_116
+						   cache_dirtyArray_117
+						   cache_dirtyArray_118
+						   cache_dirtyArray_119
+						   cache_dirtyArray_120
+						   cache_dirtyArray_121
+						   cache_dirtyArray_122
+						   cache_dirtyArray_123
+						   cache_dirtyArray_124
+						   cache_dirtyArray_125
+						   cache_dirtyArray_126
+						   cache_dirtyArray_127)
+				   {19'd0, cache_missReq[42:36]})) ||
+	    (cache_cache_serverAdapterA_outData_beforeDeq.read &&
+	     (cache_cache_serverAdapterA_outData_ff.i_notEmpty ||
+	      cache_cache_serverAdapterA_outData_enqw.whas) &&
+	     cache_memReqQ.i_notFull)) &&
+	   (cache_mshr == 3'd2)
+Blocking rules: (none)
+ 
+Rule: cache_sendFillReq
+Predicate: cache_memReqQ.i_notFull && (cache_mshr == 3'd3)
+Blocking rules: (none)
+ 
+Rule: cache_waitFillResp
+Predicate: cache_memRespQ.i_notEmpty &&
+	   (cache_cache_serverAdapterA_cnt .< 3'd3) &&
+	   ((! (cache_missReq[65:62] == 4'd0)) ||
+	    (! cache_hitQ_rv.port0__read[32])) &&
+	   (cache_mshr == 3'd4)
+Blocking rules: (none)
+ 
+Rule: cache_read
+Predicate: cache_cache_serverAdapterA_outData_beforeDeq.read &&
+	   (cache_cache_serverAdapterA_outData_ff.i_notEmpty ||
+	    cache_cache_serverAdapterA_outData_enqw.whas) &&
+	   (! cache_hitQ_rv.port0__read[32]) &&
+	   (cache_mshr == 3'd1)
+Blocking rules: (none)
+ 
+Rule: cache_mvStbToL1
+Predicate: cache_stb.i_notEmpty &&
+	   ((cache_stb.first[61:36] ==
+	     (PrimArrayDynSelect (PrimBuildArray cache_tagArray_0
+						 cache_tagArray_1
+						 cache_tagArray_2
+						 cache_tagArray_3
+						 cache_tagArray_4
+						 cache_tagArray_5
+						 cache_tagArray_6
+						 cache_tagArray_7
+						 cache_tagArray_8
+						 cache_tagArray_9
+						 cache_tagArray_10
+						 cache_tagArray_11
+						 cache_tagArray_12
+						 cache_tagArray_13
+						 cache_tagArray_14
+						 cache_tagArray_15
+						 cache_tagArray_16
+						 cache_tagArray_17
+						 cache_tagArray_18
+						 cache_tagArray_19
+						 cache_tagArray_20
+						 cache_tagArray_21
+						 cache_tagArray_22
+						 cache_tagArray_23
+						 cache_tagArray_24
+						 cache_tagArray_25
+						 cache_tagArray_26
+						 cache_tagArray_27
+						 cache_tagArray_28
+						 cache_tagArray_29
+						 cache_tagArray_30
+						 cache_tagArray_31
+						 cache_tagArray_32
+						 cache_tagArray_33
+						 cache_tagArray_34
+						 cache_tagArray_35
+						 cache_tagArray_36
+						 cache_tagArray_37
+						 cache_tagArray_38
+						 cache_tagArray_39
+						 cache_tagArray_40
+						 cache_tagArray_41
+						 cache_tagArray_42
+						 cache_tagArray_43
+						 cache_tagArray_44
+						 cache_tagArray_45
+						 cache_tagArray_46
+						 cache_tagArray_47
+						 cache_tagArray_48
+						 cache_tagArray_49
+						 cache_tagArray_50
+						 cache_tagArray_51
+						 cache_tagArray_52
+						 cache_tagArray_53
+						 cache_tagArray_54
+						 cache_tagArray_55
+						 cache_tagArray_56
+						 cache_tagArray_57
+						 cache_tagArray_58
+						 cache_tagArray_59
+						 cache_tagArray_60
+						 cache_tagArray_61
+						 cache_tagArray_62
+						 cache_tagArray_63
+						 cache_tagArray_64
+						 cache_tagArray_65
+						 cache_tagArray_66
+						 cache_tagArray_67
+						 cache_tagArray_68
+						 cache_tagArray_69
+						 cache_tagArray_70
+						 cache_tagArray_71
+						 cache_tagArray_72
+						 cache_tagArray_73
+						 cache_tagArray_74
+						 cache_tagArray_75
+						 cache_tagArray_76
+						 cache_tagArray_77
+						 cache_tagArray_78
+						 cache_tagArray_79
+						 cache_tagArray_80
+						 cache_tagArray_81
+						 cache_tagArray_82
+						 cache_tagArray_83
+						 cache_tagArray_84
+						 cache_tagArray_85
+						 cache_tagArray_86
+						 cache_tagArray_87
+						 cache_tagArray_88
+						 cache_tagArray_89
+						 cache_tagArray_90
+						 cache_tagArray_91
+						 cache_tagArray_92
+						 cache_tagArray_93
+						 cache_tagArray_94
+						 cache_tagArray_95
+						 cache_tagArray_96
+						 cache_tagArray_97
+						 cache_tagArray_98
+						 cache_tagArray_99
+						 cache_tagArray_100
+						 cache_tagArray_101
+						 cache_tagArray_102
+						 cache_tagArray_103
+						 cache_tagArray_104
+						 cache_tagArray_105
+						 cache_tagArray_106
+						 cache_tagArray_107
+						 cache_tagArray_108
+						 cache_tagArray_109
+						 cache_tagArray_110
+						 cache_tagArray_111
+						 cache_tagArray_112
+						 cache_tagArray_113
+						 cache_tagArray_114
+						 cache_tagArray_115
+						 cache_tagArray_116
+						 cache_tagArray_117
+						 cache_tagArray_118
+						 cache_tagArray_119
+						 cache_tagArray_120
+						 cache_tagArray_121
+						 cache_tagArray_122
+						 cache_tagArray_123
+						 cache_tagArray_124
+						 cache_tagArray_125
+						 cache_tagArray_126
+						 cache_tagArray_127)
+				 {19'd0, cache_stb.first[42:36]}))
+	    ? cache_cache_serverAdapterA_cnt .< 3'd3
+	    : (((PrimArrayDynSelect (PrimBuildArray cache_tagArray_0
+						    cache_tagArray_1
+						    cache_tagArray_2
+						    cache_tagArray_3
+						    cache_tagArray_4
+						    cache_tagArray_5
+						    cache_tagArray_6
+						    cache_tagArray_7
+						    cache_tagArray_8
+						    cache_tagArray_9
+						    cache_tagArray_10
+						    cache_tagArray_11
+						    cache_tagArray_12
+						    cache_tagArray_13
+						    cache_tagArray_14
+						    cache_tagArray_15
+						    cache_tagArray_16
+						    cache_tagArray_17
+						    cache_tagArray_18
+						    cache_tagArray_19
+						    cache_tagArray_20
+						    cache_tagArray_21
+						    cache_tagArray_22
+						    cache_tagArray_23
+						    cache_tagArray_24
+						    cache_tagArray_25
+						    cache_tagArray_26
+						    cache_tagArray_27
+						    cache_tagArray_28
+						    cache_tagArray_29
+						    cache_tagArray_30
+						    cache_tagArray_31
+						    cache_tagArray_32
+						    cache_tagArray_33
+						    cache_tagArray_34
+						    cache_tagArray_35
+						    cache_tagArray_36
+						    cache_tagArray_37
+						    cache_tagArray_38
+						    cache_tagArray_39
+						    cache_tagArray_40
+						    cache_tagArray_41
+						    cache_tagArray_42
+						    cache_tagArray_43
+						    cache_tagArray_44
+						    cache_tagArray_45
+						    cache_tagArray_46
+						    cache_tagArray_47
+						    cache_tagArray_48
+						    cache_tagArray_49
+						    cache_tagArray_50
+						    cache_tagArray_51
+						    cache_tagArray_52
+						    cache_tagArray_53
+						    cache_tagArray_54
+						    cache_tagArray_55
+						    cache_tagArray_56
+						    cache_tagArray_57
+						    cache_tagArray_58
+						    cache_tagArray_59
+						    cache_tagArray_60
+						    cache_tagArray_61
+						    cache_tagArray_62
+						    cache_tagArray_63
+						    cache_tagArray_64
+						    cache_tagArray_65
+						    cache_tagArray_66
+						    cache_tagArray_67
+						    cache_tagArray_68
+						    cache_tagArray_69
+						    cache_tagArray_70
+						    cache_tagArray_71
+						    cache_tagArray_72
+						    cache_tagArray_73
+						    cache_tagArray_74
+						    cache_tagArray_75
+						    cache_tagArray_76
+						    cache_tagArray_77
+						    cache_tagArray_78
+						    cache_tagArray_79
+						    cache_tagArray_80
+						    cache_tagArray_81
+						    cache_tagArray_82
+						    cache_tagArray_83
+						    cache_tagArray_84
+						    cache_tagArray_85
+						    cache_tagArray_86
+						    cache_tagArray_87
+						    cache_tagArray_88
+						    cache_tagArray_89
+						    cache_tagArray_90
+						    cache_tagArray_91
+						    cache_tagArray_92
+						    cache_tagArray_93
+						    cache_tagArray_94
+						    cache_tagArray_95
+						    cache_tagArray_96
+						    cache_tagArray_97
+						    cache_tagArray_98
+						    cache_tagArray_99
+						    cache_tagArray_100
+						    cache_tagArray_101
+						    cache_tagArray_102
+						    cache_tagArray_103
+						    cache_tagArray_104
+						    cache_tagArray_105
+						    cache_tagArray_106
+						    cache_tagArray_107
+						    cache_tagArray_108
+						    cache_tagArray_109
+						    cache_tagArray_110
+						    cache_tagArray_111
+						    cache_tagArray_112
+						    cache_tagArray_113
+						    cache_tagArray_114
+						    cache_tagArray_115
+						    cache_tagArray_116
+						    cache_tagArray_117
+						    cache_tagArray_118
+						    cache_tagArray_119
+						    cache_tagArray_120
+						    cache_tagArray_121
+						    cache_tagArray_122
+						    cache_tagArray_123
+						    cache_tagArray_124
+						    cache_tagArray_125
+						    cache_tagArray_126
+						    cache_tagArray_127)
+				    {19'd0, cache_stb.first[42:36]}) ==
+		26'd67108863) ||
+	       (! (PrimArrayDynSelect (PrimBuildArray cache_dirtyArray_0
+						      cache_dirtyArray_1
+						      cache_dirtyArray_2
+						      cache_dirtyArray_3
+						      cache_dirtyArray_4
+						      cache_dirtyArray_5
+						      cache_dirtyArray_6
+						      cache_dirtyArray_7
+						      cache_dirtyArray_8
+						      cache_dirtyArray_9
+						      cache_dirtyArray_10
+						      cache_dirtyArray_11
+						      cache_dirtyArray_12
+						      cache_dirtyArray_13
+						      cache_dirtyArray_14
+						      cache_dirtyArray_15
+						      cache_dirtyArray_16
+						      cache_dirtyArray_17
+						      cache_dirtyArray_18
+						      cache_dirtyArray_19
+						      cache_dirtyArray_20
+						      cache_dirtyArray_21
+						      cache_dirtyArray_22
+						      cache_dirtyArray_23
+						      cache_dirtyArray_24
+						      cache_dirtyArray_25
+						      cache_dirtyArray_26
+						      cache_dirtyArray_27
+						      cache_dirtyArray_28
+						      cache_dirtyArray_29
+						      cache_dirtyArray_30
+						      cache_dirtyArray_31
+						      cache_dirtyArray_32
+						      cache_dirtyArray_33
+						      cache_dirtyArray_34
+						      cache_dirtyArray_35
+						      cache_dirtyArray_36
+						      cache_dirtyArray_37
+						      cache_dirtyArray_38
+						      cache_dirtyArray_39
+						      cache_dirtyArray_40
+						      cache_dirtyArray_41
+						      cache_dirtyArray_42
+						      cache_dirtyArray_43
+						      cache_dirtyArray_44
+						      cache_dirtyArray_45
+						      cache_dirtyArray_46
+						      cache_dirtyArray_47
+						      cache_dirtyArray_48
+						      cache_dirtyArray_49
+						      cache_dirtyArray_50
+						      cache_dirtyArray_51
+						      cache_dirtyArray_52
+						      cache_dirtyArray_53
+						      cache_dirtyArray_54
+						      cache_dirtyArray_55
+						      cache_dirtyArray_56
+						      cache_dirtyArray_57
+						      cache_dirtyArray_58
+						      cache_dirtyArray_59
+						      cache_dirtyArray_60
+						      cache_dirtyArray_61
+						      cache_dirtyArray_62
+						      cache_dirtyArray_63
+						      cache_dirtyArray_64
+						      cache_dirtyArray_65
+						      cache_dirtyArray_66
+						      cache_dirtyArray_67
+						      cache_dirtyArray_68
+						      cache_dirtyArray_69
+						      cache_dirtyArray_70
+						      cache_dirtyArray_71
+						      cache_dirtyArray_72
+						      cache_dirtyArray_73
+						      cache_dirtyArray_74
+						      cache_dirtyArray_75
+						      cache_dirtyArray_76
+						      cache_dirtyArray_77
+						      cache_dirtyArray_78
+						      cache_dirtyArray_79
+						      cache_dirtyArray_80
+						      cache_dirtyArray_81
+						      cache_dirtyArray_82
+						      cache_dirtyArray_83
+						      cache_dirtyArray_84
+						      cache_dirtyArray_85
+						      cache_dirtyArray_86
+						      cache_dirtyArray_87
+						      cache_dirtyArray_88
+						      cache_dirtyArray_89
+						      cache_dirtyArray_90
+						      cache_dirtyArray_91
+						      cache_dirtyArray_92
+						      cache_dirtyArray_93
+						      cache_dirtyArray_94
+						      cache_dirtyArray_95
+						      cache_dirtyArray_96
+						      cache_dirtyArray_97
+						      cache_dirtyArray_98
+						      cache_dirtyArray_99
+						      cache_dirtyArray_100
+						      cache_dirtyArray_101
+						      cache_dirtyArray_102
+						      cache_dirtyArray_103
+						      cache_dirtyArray_104
+						      cache_dirtyArray_105
+						      cache_dirtyArray_106
+						      cache_dirtyArray_107
+						      cache_dirtyArray_108
+						      cache_dirtyArray_109
+						      cache_dirtyArray_110
+						      cache_dirtyArray_111
+						      cache_dirtyArray_112
+						      cache_dirtyArray_113
+						      cache_dirtyArray_114
+						      cache_dirtyArray_115
+						      cache_dirtyArray_116
+						      cache_dirtyArray_117
+						      cache_dirtyArray_118
+						      cache_dirtyArray_119
+						      cache_dirtyArray_120
+						      cache_dirtyArray_121
+						      cache_dirtyArray_122
+						      cache_dirtyArray_123
+						      cache_dirtyArray_124
+						      cache_dirtyArray_125
+						      cache_dirtyArray_126
+						      cache_dirtyArray_127)
+				      {19'd0, cache_stb.first[42:36]})) ||
+	       (cache_cache_serverAdapterA_cnt .< 3'd3))) &&
+	   (cache_mshr == 3'd0) &&
+	   (cache_lockL1_readBeforeLaterWrites_1.read
+	    ? cache_lockL1_port_0.whas
+	      ? ! cache_lockL1_port_0.wget
+	      : (! cache_lockL1_register)
+	    : (_ :: Bit 1))
+Blocking rules: requestD
+ 
+Rule: cache_clearL1Lock
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: cache_stbRead
+Predicate: (! cache_hitQ_rv.port0__read[32]) && (cache_mshr == 3'd5)
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterA_outData_enqueue
+Predicate: icache_cache_serverAdapterA_outData_enqw.whas &&
+	   ((! icache_cache_serverAdapterA_outData_dequeueing.whas) ||
+	    icache_cache_serverAdapterA_outData_ff.i_notEmpty)
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterA_outData_dequeue
+Predicate: icache_cache_serverAdapterA_outData_dequeueing.whas &&
+	   icache_cache_serverAdapterA_outData_ff.i_notEmpty
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterA_cnt_finalAdd
+Predicate: icache_cache_serverAdapterA_cnt_1.whas ||
+	   icache_cache_serverAdapterA_cnt_2.whas ||
+	   icache_cache_serverAdapterA_cnt_3.whas
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterA_s1__dreg_update
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterA_stageReadResponseAlways
+Predicate: icache_cache_serverAdapterA_writeWithResp.whas
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterA_moveToOutFIFO
+Predicate: ((! icache_cache_serverAdapterA_s1[0]) ||
+	    icache_cache_serverAdapterA_outData_ff.i_notFull) &&
+	   icache_cache_serverAdapterA_s1[1]
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterA_overRun
+Predicate: icache_cache_serverAdapterA_s1[1] &&
+	   ((! icache_cache_serverAdapterA_outData_beforeEnq.read) ||
+	    (! icache_cache_serverAdapterA_outData_beforeDeq.read) ||
+	    (! icache_cache_serverAdapterA_outData_ff.i_notFull))
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterB_outData_enqueue
+Predicate: icache_cache_serverAdapterB_outData_enqw.whas &&
+	   ((! icache_cache_serverAdapterB_outData_dequeueing.whas) ||
+	    icache_cache_serverAdapterB_outData_ff.i_notEmpty)
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterB_outData_dequeue
+Predicate: icache_cache_serverAdapterB_outData_dequeueing.whas &&
+	   icache_cache_serverAdapterB_outData_ff.i_notEmpty
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterB_cnt_finalAdd
+Predicate: icache_cache_serverAdapterB_cnt_1.whas ||
+	   icache_cache_serverAdapterB_cnt_2.whas ||
+	   icache_cache_serverAdapterB_cnt_3.whas
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterB_s1__dreg_update
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterB_stageReadResponseAlways
+Predicate: icache_cache_serverAdapterB_writeWithResp.whas
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterB_moveToOutFIFO
+Predicate: ((! icache_cache_serverAdapterB_s1[0]) ||
+	    icache_cache_serverAdapterB_outData_ff.i_notFull) &&
+	   icache_cache_serverAdapterB_s1[1]
+Blocking rules: (none)
+ 
+Rule: icache_cache_serverAdapterB_overRun
+Predicate: icache_cache_serverAdapterB_s1[1] &&
+	   ((! icache_cache_serverAdapterB_outData_beforeEnq.read) ||
+	    (! icache_cache_serverAdapterB_outData_beforeDeq.read) ||
+	    (! icache_cache_serverAdapterB_outData_ff.i_notFull))
+Blocking rules: (none)
+ 
+Rule: icache_lockL1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: icache_startMiss
+Predicate: (((PrimArrayDynSelect (PrimBuildArray icache_tagArray_0
+						 icache_tagArray_1
+						 icache_tagArray_2
+						 icache_tagArray_3
+						 icache_tagArray_4
+						 icache_tagArray_5
+						 icache_tagArray_6
+						 icache_tagArray_7
+						 icache_tagArray_8
+						 icache_tagArray_9
+						 icache_tagArray_10
+						 icache_tagArray_11
+						 icache_tagArray_12
+						 icache_tagArray_13
+						 icache_tagArray_14
+						 icache_tagArray_15
+						 icache_tagArray_16
+						 icache_tagArray_17
+						 icache_tagArray_18
+						 icache_tagArray_19
+						 icache_tagArray_20
+						 icache_tagArray_21
+						 icache_tagArray_22
+						 icache_tagArray_23
+						 icache_tagArray_24
+						 icache_tagArray_25
+						 icache_tagArray_26
+						 icache_tagArray_27
+						 icache_tagArray_28
+						 icache_tagArray_29
+						 icache_tagArray_30
+						 icache_tagArray_31
+						 icache_tagArray_32
+						 icache_tagArray_33
+						 icache_tagArray_34
+						 icache_tagArray_35
+						 icache_tagArray_36
+						 icache_tagArray_37
+						 icache_tagArray_38
+						 icache_tagArray_39
+						 icache_tagArray_40
+						 icache_tagArray_41
+						 icache_tagArray_42
+						 icache_tagArray_43
+						 icache_tagArray_44
+						 icache_tagArray_45
+						 icache_tagArray_46
+						 icache_tagArray_47
+						 icache_tagArray_48
+						 icache_tagArray_49
+						 icache_tagArray_50
+						 icache_tagArray_51
+						 icache_tagArray_52
+						 icache_tagArray_53
+						 icache_tagArray_54
+						 icache_tagArray_55
+						 icache_tagArray_56
+						 icache_tagArray_57
+						 icache_tagArray_58
+						 icache_tagArray_59
+						 icache_tagArray_60
+						 icache_tagArray_61
+						 icache_tagArray_62
+						 icache_tagArray_63
+						 icache_tagArray_64
+						 icache_tagArray_65
+						 icache_tagArray_66
+						 icache_tagArray_67
+						 icache_tagArray_68
+						 icache_tagArray_69
+						 icache_tagArray_70
+						 icache_tagArray_71
+						 icache_tagArray_72
+						 icache_tagArray_73
+						 icache_tagArray_74
+						 icache_tagArray_75
+						 icache_tagArray_76
+						 icache_tagArray_77
+						 icache_tagArray_78
+						 icache_tagArray_79
+						 icache_tagArray_80
+						 icache_tagArray_81
+						 icache_tagArray_82
+						 icache_tagArray_83
+						 icache_tagArray_84
+						 icache_tagArray_85
+						 icache_tagArray_86
+						 icache_tagArray_87
+						 icache_tagArray_88
+						 icache_tagArray_89
+						 icache_tagArray_90
+						 icache_tagArray_91
+						 icache_tagArray_92
+						 icache_tagArray_93
+						 icache_tagArray_94
+						 icache_tagArray_95
+						 icache_tagArray_96
+						 icache_tagArray_97
+						 icache_tagArray_98
+						 icache_tagArray_99
+						 icache_tagArray_100
+						 icache_tagArray_101
+						 icache_tagArray_102
+						 icache_tagArray_103
+						 icache_tagArray_104
+						 icache_tagArray_105
+						 icache_tagArray_106
+						 icache_tagArray_107
+						 icache_tagArray_108
+						 icache_tagArray_109
+						 icache_tagArray_110
+						 icache_tagArray_111
+						 icache_tagArray_112
+						 icache_tagArray_113
+						 icache_tagArray_114
+						 icache_tagArray_115
+						 icache_tagArray_116
+						 icache_tagArray_117
+						 icache_tagArray_118
+						 icache_tagArray_119
+						 icache_tagArray_120
+						 icache_tagArray_121
+						 icache_tagArray_122
+						 icache_tagArray_123
+						 icache_tagArray_124
+						 icache_tagArray_125
+						 icache_tagArray_126
+						 icache_tagArray_127)
+				 {19'd0, icache_missReq[42:36]}) ==
+	     26'd67108863) ||
+	    (! (PrimArrayDynSelect (PrimBuildArray icache_dirtyArray_0
+						   icache_dirtyArray_1
+						   icache_dirtyArray_2
+						   icache_dirtyArray_3
+						   icache_dirtyArray_4
+						   icache_dirtyArray_5
+						   icache_dirtyArray_6
+						   icache_dirtyArray_7
+						   icache_dirtyArray_8
+						   icache_dirtyArray_9
+						   icache_dirtyArray_10
+						   icache_dirtyArray_11
+						   icache_dirtyArray_12
+						   icache_dirtyArray_13
+						   icache_dirtyArray_14
+						   icache_dirtyArray_15
+						   icache_dirtyArray_16
+						   icache_dirtyArray_17
+						   icache_dirtyArray_18
+						   icache_dirtyArray_19
+						   icache_dirtyArray_20
+						   icache_dirtyArray_21
+						   icache_dirtyArray_22
+						   icache_dirtyArray_23
+						   icache_dirtyArray_24
+						   icache_dirtyArray_25
+						   icache_dirtyArray_26
+						   icache_dirtyArray_27
+						   icache_dirtyArray_28
+						   icache_dirtyArray_29
+						   icache_dirtyArray_30
+						   icache_dirtyArray_31
+						   icache_dirtyArray_32
+						   icache_dirtyArray_33
+						   icache_dirtyArray_34
+						   icache_dirtyArray_35
+						   icache_dirtyArray_36
+						   icache_dirtyArray_37
+						   icache_dirtyArray_38
+						   icache_dirtyArray_39
+						   icache_dirtyArray_40
+						   icache_dirtyArray_41
+						   icache_dirtyArray_42
+						   icache_dirtyArray_43
+						   icache_dirtyArray_44
+						   icache_dirtyArray_45
+						   icache_dirtyArray_46
+						   icache_dirtyArray_47
+						   icache_dirtyArray_48
+						   icache_dirtyArray_49
+						   icache_dirtyArray_50
+						   icache_dirtyArray_51
+						   icache_dirtyArray_52
+						   icache_dirtyArray_53
+						   icache_dirtyArray_54
+						   icache_dirtyArray_55
+						   icache_dirtyArray_56
+						   icache_dirtyArray_57
+						   icache_dirtyArray_58
+						   icache_dirtyArray_59
+						   icache_dirtyArray_60
+						   icache_dirtyArray_61
+						   icache_dirtyArray_62
+						   icache_dirtyArray_63
+						   icache_dirtyArray_64
+						   icache_dirtyArray_65
+						   icache_dirtyArray_66
+						   icache_dirtyArray_67
+						   icache_dirtyArray_68
+						   icache_dirtyArray_69
+						   icache_dirtyArray_70
+						   icache_dirtyArray_71
+						   icache_dirtyArray_72
+						   icache_dirtyArray_73
+						   icache_dirtyArray_74
+						   icache_dirtyArray_75
+						   icache_dirtyArray_76
+						   icache_dirtyArray_77
+						   icache_dirtyArray_78
+						   icache_dirtyArray_79
+						   icache_dirtyArray_80
+						   icache_dirtyArray_81
+						   icache_dirtyArray_82
+						   icache_dirtyArray_83
+						   icache_dirtyArray_84
+						   icache_dirtyArray_85
+						   icache_dirtyArray_86
+						   icache_dirtyArray_87
+						   icache_dirtyArray_88
+						   icache_dirtyArray_89
+						   icache_dirtyArray_90
+						   icache_dirtyArray_91
+						   icache_dirtyArray_92
+						   icache_dirtyArray_93
+						   icache_dirtyArray_94
+						   icache_dirtyArray_95
+						   icache_dirtyArray_96
+						   icache_dirtyArray_97
+						   icache_dirtyArray_98
+						   icache_dirtyArray_99
+						   icache_dirtyArray_100
+						   icache_dirtyArray_101
+						   icache_dirtyArray_102
+						   icache_dirtyArray_103
+						   icache_dirtyArray_104
+						   icache_dirtyArray_105
+						   icache_dirtyArray_106
+						   icache_dirtyArray_107
+						   icache_dirtyArray_108
+						   icache_dirtyArray_109
+						   icache_dirtyArray_110
+						   icache_dirtyArray_111
+						   icache_dirtyArray_112
+						   icache_dirtyArray_113
+						   icache_dirtyArray_114
+						   icache_dirtyArray_115
+						   icache_dirtyArray_116
+						   icache_dirtyArray_117
+						   icache_dirtyArray_118
+						   icache_dirtyArray_119
+						   icache_dirtyArray_120
+						   icache_dirtyArray_121
+						   icache_dirtyArray_122
+						   icache_dirtyArray_123
+						   icache_dirtyArray_124
+						   icache_dirtyArray_125
+						   icache_dirtyArray_126
+						   icache_dirtyArray_127)
+				   {19'd0, icache_missReq[42:36]})) ||
+	    (icache_cache_serverAdapterA_outData_beforeDeq.read &&
+	     (icache_cache_serverAdapterA_outData_ff.i_notEmpty ||
+	      icache_cache_serverAdapterA_outData_enqw.whas) &&
+	     icache_memReqQ.i_notFull)) &&
+	   (icache_mshr == 3'd2)
+Blocking rules: (none)
+ 
+Rule: icache_sendFillReq
+Predicate: icache_memReqQ.i_notFull && (icache_mshr == 3'd3)
+Blocking rules: (none)
+ 
+Rule: icache_waitFillResp
+Predicate: icache_memRespQ.i_notEmpty &&
+	   (icache_cache_serverAdapterA_cnt .< 3'd3) &&
+	   ((! (icache_missReq[65:62] == 4'd0)) ||
+	    (! icache_hitQ_rv.port0__read[32])) &&
+	   (icache_mshr == 3'd4)
+Blocking rules: (none)
+ 
+Rule: icache_read
+Predicate: icache_cache_serverAdapterA_outData_beforeDeq.read &&
+	   (icache_cache_serverAdapterA_outData_ff.i_notEmpty ||
+	    icache_cache_serverAdapterA_outData_enqw.whas) &&
+	   (! icache_hitQ_rv.port0__read[32]) &&
+	   (icache_mshr == 3'd1)
+Blocking rules: (none)
+ 
+Rule: icache_mvStbToL1
+Predicate: icache_stb.i_notEmpty &&
+	   ((icache_stb.first[61:36] ==
+	     (PrimArrayDynSelect (PrimBuildArray icache_tagArray_0
+						 icache_tagArray_1
+						 icache_tagArray_2
+						 icache_tagArray_3
+						 icache_tagArray_4
+						 icache_tagArray_5
+						 icache_tagArray_6
+						 icache_tagArray_7
+						 icache_tagArray_8
+						 icache_tagArray_9
+						 icache_tagArray_10
+						 icache_tagArray_11
+						 icache_tagArray_12
+						 icache_tagArray_13
+						 icache_tagArray_14
+						 icache_tagArray_15
+						 icache_tagArray_16
+						 icache_tagArray_17
+						 icache_tagArray_18
+						 icache_tagArray_19
+						 icache_tagArray_20
+						 icache_tagArray_21
+						 icache_tagArray_22
+						 icache_tagArray_23
+						 icache_tagArray_24
+						 icache_tagArray_25
+						 icache_tagArray_26
+						 icache_tagArray_27
+						 icache_tagArray_28
+						 icache_tagArray_29
+						 icache_tagArray_30
+						 icache_tagArray_31
+						 icache_tagArray_32
+						 icache_tagArray_33
+						 icache_tagArray_34
+						 icache_tagArray_35
+						 icache_tagArray_36
+						 icache_tagArray_37
+						 icache_tagArray_38
+						 icache_tagArray_39
+						 icache_tagArray_40
+						 icache_tagArray_41
+						 icache_tagArray_42
+						 icache_tagArray_43
+						 icache_tagArray_44
+						 icache_tagArray_45
+						 icache_tagArray_46
+						 icache_tagArray_47
+						 icache_tagArray_48
+						 icache_tagArray_49
+						 icache_tagArray_50
+						 icache_tagArray_51
+						 icache_tagArray_52
+						 icache_tagArray_53
+						 icache_tagArray_54
+						 icache_tagArray_55
+						 icache_tagArray_56
+						 icache_tagArray_57
+						 icache_tagArray_58
+						 icache_tagArray_59
+						 icache_tagArray_60
+						 icache_tagArray_61
+						 icache_tagArray_62
+						 icache_tagArray_63
+						 icache_tagArray_64
+						 icache_tagArray_65
+						 icache_tagArray_66
+						 icache_tagArray_67
+						 icache_tagArray_68
+						 icache_tagArray_69
+						 icache_tagArray_70
+						 icache_tagArray_71
+						 icache_tagArray_72
+						 icache_tagArray_73
+						 icache_tagArray_74
+						 icache_tagArray_75
+						 icache_tagArray_76
+						 icache_tagArray_77
+						 icache_tagArray_78
+						 icache_tagArray_79
+						 icache_tagArray_80
+						 icache_tagArray_81
+						 icache_tagArray_82
+						 icache_tagArray_83
+						 icache_tagArray_84
+						 icache_tagArray_85
+						 icache_tagArray_86
+						 icache_tagArray_87
+						 icache_tagArray_88
+						 icache_tagArray_89
+						 icache_tagArray_90
+						 icache_tagArray_91
+						 icache_tagArray_92
+						 icache_tagArray_93
+						 icache_tagArray_94
+						 icache_tagArray_95
+						 icache_tagArray_96
+						 icache_tagArray_97
+						 icache_tagArray_98
+						 icache_tagArray_99
+						 icache_tagArray_100
+						 icache_tagArray_101
+						 icache_tagArray_102
+						 icache_tagArray_103
+						 icache_tagArray_104
+						 icache_tagArray_105
+						 icache_tagArray_106
+						 icache_tagArray_107
+						 icache_tagArray_108
+						 icache_tagArray_109
+						 icache_tagArray_110
+						 icache_tagArray_111
+						 icache_tagArray_112
+						 icache_tagArray_113
+						 icache_tagArray_114
+						 icache_tagArray_115
+						 icache_tagArray_116
+						 icache_tagArray_117
+						 icache_tagArray_118
+						 icache_tagArray_119
+						 icache_tagArray_120
+						 icache_tagArray_121
+						 icache_tagArray_122
+						 icache_tagArray_123
+						 icache_tagArray_124
+						 icache_tagArray_125
+						 icache_tagArray_126
+						 icache_tagArray_127)
+				 {19'd0, icache_stb.first[42:36]}))
+	    ? icache_cache_serverAdapterA_cnt .< 3'd3
+	    : (((PrimArrayDynSelect (PrimBuildArray icache_tagArray_0
+						    icache_tagArray_1
+						    icache_tagArray_2
+						    icache_tagArray_3
+						    icache_tagArray_4
+						    icache_tagArray_5
+						    icache_tagArray_6
+						    icache_tagArray_7
+						    icache_tagArray_8
+						    icache_tagArray_9
+						    icache_tagArray_10
+						    icache_tagArray_11
+						    icache_tagArray_12
+						    icache_tagArray_13
+						    icache_tagArray_14
+						    icache_tagArray_15
+						    icache_tagArray_16
+						    icache_tagArray_17
+						    icache_tagArray_18
+						    icache_tagArray_19
+						    icache_tagArray_20
+						    icache_tagArray_21
+						    icache_tagArray_22
+						    icache_tagArray_23
+						    icache_tagArray_24
+						    icache_tagArray_25
+						    icache_tagArray_26
+						    icache_tagArray_27
+						    icache_tagArray_28
+						    icache_tagArray_29
+						    icache_tagArray_30
+						    icache_tagArray_31
+						    icache_tagArray_32
+						    icache_tagArray_33
+						    icache_tagArray_34
+						    icache_tagArray_35
+						    icache_tagArray_36
+						    icache_tagArray_37
+						    icache_tagArray_38
+						    icache_tagArray_39
+						    icache_tagArray_40
+						    icache_tagArray_41
+						    icache_tagArray_42
+						    icache_tagArray_43
+						    icache_tagArray_44
+						    icache_tagArray_45
+						    icache_tagArray_46
+						    icache_tagArray_47
+						    icache_tagArray_48
+						    icache_tagArray_49
+						    icache_tagArray_50
+						    icache_tagArray_51
+						    icache_tagArray_52
+						    icache_tagArray_53
+						    icache_tagArray_54
+						    icache_tagArray_55
+						    icache_tagArray_56
+						    icache_tagArray_57
+						    icache_tagArray_58
+						    icache_tagArray_59
+						    icache_tagArray_60
+						    icache_tagArray_61
+						    icache_tagArray_62
+						    icache_tagArray_63
+						    icache_tagArray_64
+						    icache_tagArray_65
+						    icache_tagArray_66
+						    icache_tagArray_67
+						    icache_tagArray_68
+						    icache_tagArray_69
+						    icache_tagArray_70
+						    icache_tagArray_71
+						    icache_tagArray_72
+						    icache_tagArray_73
+						    icache_tagArray_74
+						    icache_tagArray_75
+						    icache_tagArray_76
+						    icache_tagArray_77
+						    icache_tagArray_78
+						    icache_tagArray_79
+						    icache_tagArray_80
+						    icache_tagArray_81
+						    icache_tagArray_82
+						    icache_tagArray_83
+						    icache_tagArray_84
+						    icache_tagArray_85
+						    icache_tagArray_86
+						    icache_tagArray_87
+						    icache_tagArray_88
+						    icache_tagArray_89
+						    icache_tagArray_90
+						    icache_tagArray_91
+						    icache_tagArray_92
+						    icache_tagArray_93
+						    icache_tagArray_94
+						    icache_tagArray_95
+						    icache_tagArray_96
+						    icache_tagArray_97
+						    icache_tagArray_98
+						    icache_tagArray_99
+						    icache_tagArray_100
+						    icache_tagArray_101
+						    icache_tagArray_102
+						    icache_tagArray_103
+						    icache_tagArray_104
+						    icache_tagArray_105
+						    icache_tagArray_106
+						    icache_tagArray_107
+						    icache_tagArray_108
+						    icache_tagArray_109
+						    icache_tagArray_110
+						    icache_tagArray_111
+						    icache_tagArray_112
+						    icache_tagArray_113
+						    icache_tagArray_114
+						    icache_tagArray_115
+						    icache_tagArray_116
+						    icache_tagArray_117
+						    icache_tagArray_118
+						    icache_tagArray_119
+						    icache_tagArray_120
+						    icache_tagArray_121
+						    icache_tagArray_122
+						    icache_tagArray_123
+						    icache_tagArray_124
+						    icache_tagArray_125
+						    icache_tagArray_126
+						    icache_tagArray_127)
+				    {19'd0, icache_stb.first[42:36]}) ==
+		26'd67108863) ||
+	       (! (PrimArrayDynSelect (PrimBuildArray icache_dirtyArray_0
+						      icache_dirtyArray_1
+						      icache_dirtyArray_2
+						      icache_dirtyArray_3
+						      icache_dirtyArray_4
+						      icache_dirtyArray_5
+						      icache_dirtyArray_6
+						      icache_dirtyArray_7
+						      icache_dirtyArray_8
+						      icache_dirtyArray_9
+						      icache_dirtyArray_10
+						      icache_dirtyArray_11
+						      icache_dirtyArray_12
+						      icache_dirtyArray_13
+						      icache_dirtyArray_14
+						      icache_dirtyArray_15
+						      icache_dirtyArray_16
+						      icache_dirtyArray_17
+						      icache_dirtyArray_18
+						      icache_dirtyArray_19
+						      icache_dirtyArray_20
+						      icache_dirtyArray_21
+						      icache_dirtyArray_22
+						      icache_dirtyArray_23
+						      icache_dirtyArray_24
+						      icache_dirtyArray_25
+						      icache_dirtyArray_26
+						      icache_dirtyArray_27
+						      icache_dirtyArray_28
+						      icache_dirtyArray_29
+						      icache_dirtyArray_30
+						      icache_dirtyArray_31
+						      icache_dirtyArray_32
+						      icache_dirtyArray_33
+						      icache_dirtyArray_34
+						      icache_dirtyArray_35
+						      icache_dirtyArray_36
+						      icache_dirtyArray_37
+						      icache_dirtyArray_38
+						      icache_dirtyArray_39
+						      icache_dirtyArray_40
+						      icache_dirtyArray_41
+						      icache_dirtyArray_42
+						      icache_dirtyArray_43
+						      icache_dirtyArray_44
+						      icache_dirtyArray_45
+						      icache_dirtyArray_46
+						      icache_dirtyArray_47
+						      icache_dirtyArray_48
+						      icache_dirtyArray_49
+						      icache_dirtyArray_50
+						      icache_dirtyArray_51
+						      icache_dirtyArray_52
+						      icache_dirtyArray_53
+						      icache_dirtyArray_54
+						      icache_dirtyArray_55
+						      icache_dirtyArray_56
+						      icache_dirtyArray_57
+						      icache_dirtyArray_58
+						      icache_dirtyArray_59
+						      icache_dirtyArray_60
+						      icache_dirtyArray_61
+						      icache_dirtyArray_62
+						      icache_dirtyArray_63
+						      icache_dirtyArray_64
+						      icache_dirtyArray_65
+						      icache_dirtyArray_66
+						      icache_dirtyArray_67
+						      icache_dirtyArray_68
+						      icache_dirtyArray_69
+						      icache_dirtyArray_70
+						      icache_dirtyArray_71
+						      icache_dirtyArray_72
+						      icache_dirtyArray_73
+						      icache_dirtyArray_74
+						      icache_dirtyArray_75
+						      icache_dirtyArray_76
+						      icache_dirtyArray_77
+						      icache_dirtyArray_78
+						      icache_dirtyArray_79
+						      icache_dirtyArray_80
+						      icache_dirtyArray_81
+						      icache_dirtyArray_82
+						      icache_dirtyArray_83
+						      icache_dirtyArray_84
+						      icache_dirtyArray_85
+						      icache_dirtyArray_86
+						      icache_dirtyArray_87
+						      icache_dirtyArray_88
+						      icache_dirtyArray_89
+						      icache_dirtyArray_90
+						      icache_dirtyArray_91
+						      icache_dirtyArray_92
+						      icache_dirtyArray_93
+						      icache_dirtyArray_94
+						      icache_dirtyArray_95
+						      icache_dirtyArray_96
+						      icache_dirtyArray_97
+						      icache_dirtyArray_98
+						      icache_dirtyArray_99
+						      icache_dirtyArray_100
+						      icache_dirtyArray_101
+						      icache_dirtyArray_102
+						      icache_dirtyArray_103
+						      icache_dirtyArray_104
+						      icache_dirtyArray_105
+						      icache_dirtyArray_106
+						      icache_dirtyArray_107
+						      icache_dirtyArray_108
+						      icache_dirtyArray_109
+						      icache_dirtyArray_110
+						      icache_dirtyArray_111
+						      icache_dirtyArray_112
+						      icache_dirtyArray_113
+						      icache_dirtyArray_114
+						      icache_dirtyArray_115
+						      icache_dirtyArray_116
+						      icache_dirtyArray_117
+						      icache_dirtyArray_118
+						      icache_dirtyArray_119
+						      icache_dirtyArray_120
+						      icache_dirtyArray_121
+						      icache_dirtyArray_122
+						      icache_dirtyArray_123
+						      icache_dirtyArray_124
+						      icache_dirtyArray_125
+						      icache_dirtyArray_126
+						      icache_dirtyArray_127)
+				      {19'd0, icache_stb.first[42:36]})) ||
+	       (icache_cache_serverAdapterA_cnt .< 3'd3))) &&
+	   (icache_mshr == 3'd0) &&
+	   (icache_lockL1_readBeforeLaterWrites_1.read
+	    ? icache_lockL1_port_0.whas
+	      ? ! icache_lockL1_port_0.wget
+	      : (! icache_lockL1_register)
+	    : (_ :: Bit 1))
+Blocking rules: requestI
+ 
+Rule: icache_clearL1Lock
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: icache_stbRead
+Predicate: (! icache_hitQ_rv.port0__read[32]) && (icache_mshr == 3'd5)
+Blocking rules: (none)
+ 
+Rule: mainMem_bram_serverAdapter_outData_enqueue
+Predicate: mainMem_bram_serverAdapter_outData_enqw.whas &&
+	   ((! mainMem_bram_serverAdapter_outData_dequeueing.whas) ||
+	    mainMem_bram_serverAdapter_outData_ff.i_notEmpty)
+Blocking rules: (none)
+ 
+Rule: mainMem_bram_serverAdapter_outData_dequeue
+Predicate: mainMem_bram_serverAdapter_outData_dequeueing.whas &&
+	   mainMem_bram_serverAdapter_outData_ff.i_notEmpty
+Blocking rules: (none)
+ 
+Rule: mainMem_bram_serverAdapter_cnt_finalAdd
+Predicate: mainMem_bram_serverAdapter_cnt_1.whas ||
+	   mainMem_bram_serverAdapter_cnt_2.whas ||
+	   mainMem_bram_serverAdapter_cnt_3.whas
+Blocking rules: (none)
+ 
+Rule: mainMem_bram_serverAdapter_s1__dreg_update
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_bram_serverAdapter_stageReadResponseAlways
+Predicate: mainMem_bram_serverAdapter_writeWithResp.whas
+Blocking rules: (none)
+ 
+Rule: mainMem_bram_serverAdapter_moveToOutFIFO
+Predicate: ((! mainMem_bram_serverAdapter_s1[0]) ||
+	    mainMem_bram_serverAdapter_outData_ff.i_notFull) &&
+	   mainMem_bram_serverAdapter_s1[1]
+Blocking rules: (none)
+ 
+Rule: mainMem_bram_serverAdapter_overRun
+Predicate: mainMem_bram_serverAdapter_s1[1] &&
+	   ((! mainMem_bram_serverAdapter_outData_beforeEnq.read) ||
+	    (! mainMem_bram_serverAdapter_outData_beforeDeq.read) ||
+	    (! mainMem_bram_serverAdapter_outData_ff.i_notFull))
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_1
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_2
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_3
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_4
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_5
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_6
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_7
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_8
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_9
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_10
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_11
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_12
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_13
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_14
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_15
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_16
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_17
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_18
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_19
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_20
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_21
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_22
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_23
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_24
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_25
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_26
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_27
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_28
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_29
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_30
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_31
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_32
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_33
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_34
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_35
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_36
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_37
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_dl_try_move_38
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainMem_deq
+Predicate: mainMem_bram_serverAdapter_outData_beforeDeq.read &&
+	   (mainMem_bram_serverAdapter_outData_ff.i_notEmpty ||
+	    mainMem_bram_serverAdapter_outData_enqw.whas) &&
+	   (! mainMem_dl_d_0_rv.port1__read[512])
+Blocking rules: (none)
+ 
+Rule: mainIMem_bram_serverAdapter_outData_enqueue
+Predicate: mainIMem_bram_serverAdapter_outData_enqw.whas &&
+	   ((! mainIMem_bram_serverAdapter_outData_dequeueing.whas) ||
+	    mainIMem_bram_serverAdapter_outData_ff.i_notEmpty)
+Blocking rules: (none)
+ 
+Rule: mainIMem_bram_serverAdapter_outData_dequeue
+Predicate: mainIMem_bram_serverAdapter_outData_dequeueing.whas &&
+	   mainIMem_bram_serverAdapter_outData_ff.i_notEmpty
+Blocking rules: (none)
+ 
+Rule: mainIMem_bram_serverAdapter_cnt_finalAdd
+Predicate: mainIMem_bram_serverAdapter_cnt_1.whas ||
+	   mainIMem_bram_serverAdapter_cnt_2.whas ||
+	   mainIMem_bram_serverAdapter_cnt_3.whas
+Blocking rules: (none)
+ 
+Rule: mainIMem_bram_serverAdapter_s1__dreg_update
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_bram_serverAdapter_stageReadResponseAlways
+Predicate: mainIMem_bram_serverAdapter_writeWithResp.whas
+Blocking rules: (none)
+ 
+Rule: mainIMem_bram_serverAdapter_moveToOutFIFO
+Predicate: ((! mainIMem_bram_serverAdapter_s1[0]) ||
+	    mainIMem_bram_serverAdapter_outData_ff.i_notFull) &&
+	   mainIMem_bram_serverAdapter_s1[1]
+Blocking rules: (none)
+ 
+Rule: mainIMem_bram_serverAdapter_overRun
+Predicate: mainIMem_bram_serverAdapter_s1[1] &&
+	   ((! mainIMem_bram_serverAdapter_outData_beforeEnq.read) ||
+	    (! mainIMem_bram_serverAdapter_outData_beforeDeq.read) ||
+	    (! mainIMem_bram_serverAdapter_outData_ff.i_notFull))
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_1
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_2
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_3
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_4
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_5
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_6
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_7
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_8
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_9
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_10
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_11
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_12
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_13
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_14
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_15
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_16
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_17
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_18
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_19
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_20
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_21
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_22
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_23
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_24
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_25
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_26
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_27
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_28
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_29
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_30
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_31
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_32
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_33
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_34
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_35
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_36
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_37
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_dl_try_move_38
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: mainIMem_deq
+Predicate: mainIMem_bram_serverAdapter_outData_beforeDeq.read &&
+	   (mainIMem_bram_serverAdapter_outData_ff.i_notEmpty ||
+	    mainIMem_bram_serverAdapter_outData_enqw.whas) &&
+	   (! mainIMem_dl_d_0_rv.port1__read[512])
+Blocking rules: (none)
+ 
 Rule: tic
 Predicate: True
 Blocking rules: (none)
  
+Rule: connectCacheDram
+Predicate: cache_memReqQ.i_notEmpty &&
+	   (mainMem_bram_serverAdapter_cnt .< 3'd3)
+Blocking rules: (none)
+ 
+Rule: connectDramCache
+Predicate: mainMem_dl_d_39_rv.port0__read[512] && cache_memRespQ.i_notFull
+Blocking rules: (none)
+ 
+Rule: connectICacheDram
+Predicate: icache_memReqQ.i_notEmpty &&
+	   (mainIMem_bram_serverAdapter_cnt .< 3'd3)
+Blocking rules: (none)
+ 
+Rule: connectIDramCache
+Predicate: mainIMem_dl_d_39_rv.port0__read[512] && icache_memRespQ.i_notFull
+Blocking rules: (none)
+ 
 Rule: requestI
-Predicate: rv_core.RDY_getIReq && (bram_serverAdapterB_cnt .< 3'd3)
+Predicate: (icache_mshr == 3'd0) &&
+	   rv_core.RDY_getIReq &&
+	   ((! icache_stb.notEmpty) || icache_stb.i_notEmpty) &&
+	   (icache_cache_serverAdapterA_cnt .< 3'd3) &&
+	   icache_stb.i_notFull
 Blocking rules: (none)
  
 Rule: responseI
-Predicate: bram_serverAdapterB_outData_beforeDeq.read &&
-	   (bram_serverAdapterB_outData_ff.i_notEmpty ||
-	    bram_serverAdapterB_outData_enqw.whas) &&
-	   rv_core.RDY_getIResp
+Predicate: icache_hitQ_rv.port1__read[32] && rv_core.RDY_getIResp
 Blocking rules: (none)
  
 Rule: requestD
-Predicate: rv_core.RDY_getDReq && (bram_serverAdapterA_cnt .< 3'd3)
+Predicate: (cache_mshr == 3'd0) &&
+	   rv_core.RDY_getDReq &&
+	   ((! cache_stb.notEmpty) || cache_stb.i_notEmpty) &&
+	   (cache_cache_serverAdapterA_cnt .< 3'd3) &&
+	   cache_stb.i_notFull
 Blocking rules: (none)
  
 Rule: responseD
-Predicate: bram_serverAdapterA_outData_beforeDeq.read &&
-	   (bram_serverAdapterA_outData_ff.i_notEmpty ||
-	    bram_serverAdapterA_outData_enqw.whas) &&
-	   rv_core.RDY_getDResp
+Predicate: cache_hitQ_rv.port1__read[32] && rv_core.RDY_getDResp
 Blocking rules: (none)
  
 Rule: requestMMIO
@@ -111,25 +2085,167 @@ Predicate: rv_core.RDY_getMMIOResp && mmioreq.i_notEmpty
 Blocking rules: (none)
  
 Logical execution order: tic,
+			 connectCacheDram,
+			 connectDramCache,
+			 connectICacheDram,
+			 connectIDramCache,
 			 responseMMIO,
+			 bram_serverAdapterA_stageReadResponseAlways,
 			 bram_serverAdapterA_overRun,
 			 bram_serverAdapterA_moveToOutFIFO,
-			 responseD,
-			 requestD,
-			 requestMMIO,
-			 bram_serverAdapterA_stageReadResponseAlways,
 			 bram_serverAdapterA_outData_enqueue,
 			 bram_serverAdapterA_outData_dequeue,
 			 bram_serverAdapterA_cnt_finalAdd,
 			 bram_serverAdapterA_s1__dreg_update,
+			 bram_serverAdapterB_stageReadResponseAlways,
 			 bram_serverAdapterB_overRun,
 			 bram_serverAdapterB_moveToOutFIFO,
-			 responseI,
-			 requestI,
-			 bram_serverAdapterB_stageReadResponseAlways,
 			 bram_serverAdapterB_outData_enqueue,
 			 bram_serverAdapterB_outData_dequeue,
 			 bram_serverAdapterB_cnt_finalAdd,
-			 bram_serverAdapterB_s1__dreg_update
+			 bram_serverAdapterB_s1__dreg_update,
+			 cache_sendFillReq,
+			 cache_waitFillResp,
+			 cache_stbRead,
+			 cache_cache_serverAdapterA_overRun,
+			 cache_cache_serverAdapterA_moveToOutFIFO,
+			 cache_startMiss,
+			 cache_read,
+			 responseD,
+			 requestD,
+			 requestMMIO,
+			 cache_mvStbToL1,
+			 cache_clearL1Lock,
+			 cache_cache_serverAdapterA_stageReadResponseAlways,
+			 cache_cache_serverAdapterA_outData_enqueue,
+			 cache_cache_serverAdapterA_outData_dequeue,
+			 cache_cache_serverAdapterA_cnt_finalAdd,
+			 cache_cache_serverAdapterA_s1__dreg_update,
+			 cache_cache_serverAdapterB_stageReadResponseAlways,
+			 cache_cache_serverAdapterB_overRun,
+			 cache_cache_serverAdapterB_moveToOutFIFO,
+			 cache_cache_serverAdapterB_outData_enqueue,
+			 cache_cache_serverAdapterB_outData_dequeue,
+			 cache_cache_serverAdapterB_cnt_finalAdd,
+			 cache_cache_serverAdapterB_s1__dreg_update,
+			 cache_lockL1_canonicalize,
+			 icache_sendFillReq,
+			 icache_waitFillResp,
+			 icache_stbRead,
+			 icache_cache_serverAdapterA_overRun,
+			 icache_cache_serverAdapterA_moveToOutFIFO,
+			 icache_startMiss,
+			 icache_read,
+			 responseI,
+			 requestI,
+			 icache_mvStbToL1,
+			 icache_clearL1Lock,
+			 icache_cache_serverAdapterA_stageReadResponseAlways,
+			 icache_cache_serverAdapterA_outData_enqueue,
+			 icache_cache_serverAdapterA_outData_dequeue,
+			 icache_cache_serverAdapterA_cnt_finalAdd,
+			 icache_cache_serverAdapterA_s1__dreg_update,
+			 icache_cache_serverAdapterB_stageReadResponseAlways,
+			 icache_cache_serverAdapterB_overRun,
+			 icache_cache_serverAdapterB_moveToOutFIFO,
+			 icache_cache_serverAdapterB_outData_enqueue,
+			 icache_cache_serverAdapterB_outData_dequeue,
+			 icache_cache_serverAdapterB_cnt_finalAdd,
+			 icache_cache_serverAdapterB_s1__dreg_update,
+			 icache_lockL1_canonicalize,
+			 mainMem_bram_serverAdapter_stageReadResponseAlways,
+			 mainMem_bram_serverAdapter_overRun,
+			 mainMem_bram_serverAdapter_moveToOutFIFO,
+			 mainMem_bram_serverAdapter_s1__dreg_update,
+			 mainMem_dl_try_move,
+			 mainMem_dl_try_move_1,
+			 mainMem_dl_try_move_2,
+			 mainMem_dl_try_move_3,
+			 mainMem_dl_try_move_4,
+			 mainMem_dl_try_move_5,
+			 mainMem_dl_try_move_6,
+			 mainMem_dl_try_move_7,
+			 mainMem_dl_try_move_8,
+			 mainMem_dl_try_move_9,
+			 mainMem_dl_try_move_10,
+			 mainMem_dl_try_move_11,
+			 mainMem_dl_try_move_12,
+			 mainMem_dl_try_move_13,
+			 mainMem_dl_try_move_14,
+			 mainMem_dl_try_move_15,
+			 mainMem_dl_try_move_16,
+			 mainMem_dl_try_move_17,
+			 mainMem_dl_try_move_18,
+			 mainMem_dl_try_move_19,
+			 mainMem_dl_try_move_20,
+			 mainMem_dl_try_move_21,
+			 mainMem_dl_try_move_22,
+			 mainMem_dl_try_move_23,
+			 mainMem_dl_try_move_24,
+			 mainMem_dl_try_move_25,
+			 mainMem_dl_try_move_26,
+			 mainMem_dl_try_move_27,
+			 mainMem_dl_try_move_28,
+			 mainMem_dl_try_move_29,
+			 mainMem_dl_try_move_30,
+			 mainMem_dl_try_move_31,
+			 mainMem_dl_try_move_32,
+			 mainMem_dl_try_move_33,
+			 mainMem_dl_try_move_34,
+			 mainMem_dl_try_move_35,
+			 mainMem_dl_try_move_36,
+			 mainMem_dl_try_move_37,
+			 mainMem_dl_try_move_38,
+			 mainMem_deq,
+			 mainMem_bram_serverAdapter_outData_enqueue,
+			 mainMem_bram_serverAdapter_outData_dequeue,
+			 mainMem_bram_serverAdapter_cnt_finalAdd,
+			 mainIMem_bram_serverAdapter_stageReadResponseAlways,
+			 mainIMem_bram_serverAdapter_overRun,
+			 mainIMem_bram_serverAdapter_moveToOutFIFO,
+			 mainIMem_bram_serverAdapter_s1__dreg_update,
+			 mainIMem_dl_try_move,
+			 mainIMem_dl_try_move_1,
+			 mainIMem_dl_try_move_2,
+			 mainIMem_dl_try_move_3,
+			 mainIMem_dl_try_move_4,
+			 mainIMem_dl_try_move_5,
+			 mainIMem_dl_try_move_6,
+			 mainIMem_dl_try_move_7,
+			 mainIMem_dl_try_move_8,
+			 mainIMem_dl_try_move_9,
+			 mainIMem_dl_try_move_10,
+			 mainIMem_dl_try_move_11,
+			 mainIMem_dl_try_move_12,
+			 mainIMem_dl_try_move_13,
+			 mainIMem_dl_try_move_14,
+			 mainIMem_dl_try_move_15,
+			 mainIMem_dl_try_move_16,
+			 mainIMem_dl_try_move_17,
+			 mainIMem_dl_try_move_18,
+			 mainIMem_dl_try_move_19,
+			 mainIMem_dl_try_move_20,
+			 mainIMem_dl_try_move_21,
+			 mainIMem_dl_try_move_22,
+			 mainIMem_dl_try_move_23,
+			 mainIMem_dl_try_move_24,
+			 mainIMem_dl_try_move_25,
+			 mainIMem_dl_try_move_26,
+			 mainIMem_dl_try_move_27,
+			 mainIMem_dl_try_move_28,
+			 mainIMem_dl_try_move_29,
+			 mainIMem_dl_try_move_30,
+			 mainIMem_dl_try_move_31,
+			 mainIMem_dl_try_move_32,
+			 mainIMem_dl_try_move_33,
+			 mainIMem_dl_try_move_34,
+			 mainIMem_dl_try_move_35,
+			 mainIMem_dl_try_move_36,
+			 mainIMem_dl_try_move_37,
+			 mainIMem_dl_try_move_38,
+			 mainIMem_deq,
+			 mainIMem_bram_serverAdapter_outData_enqueue,
+			 mainIMem_bram_serverAdapter_outData_dequeue,
+			 mainIMem_bram_serverAdapter_cnt_finalAdd
 
 ===============================================

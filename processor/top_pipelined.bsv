@@ -3,6 +3,8 @@ import BRAM::*;
 import pipelined::*;
 import FIFO::*;
 import Cache::*;
+import MainMem::*;
+import MemTypes::*;
 typedef Bit#(32) Word;
 
 module mktop_pipelined(Empty);
@@ -15,10 +17,12 @@ module mktop_pipelined(Empty);
     Reg#(Mem) ireq <- mkRegU;
     Reg#(Mem) dreq <- mkRegU;
     FIFO#(Mem) mmioreq <- mkFIFO;
-    let debug = False;
+    let debug = True;
     Reg#(Bit#(32)) cycle_count <- mkReg(0);
     Cache cache <- mkCache;
-    MainMem mainMem <- mkMainMem(); //Initialize both to 0
+    Cache icache <- mkCache;
+    MainMem mainMem <- mkMainMem();
+    MainMem mainIMem <- mkMainMem();
 
     rule tic;
 	    cycle_count <= cycle_count + 1;
@@ -34,19 +38,26 @@ module mktop_pipelined(Empty);
         cache.putFromMem(resp);
     endrule
 
+    rule connectICacheDram;
+        let lineReq <- icache.getToMem();
+        mainIMem.put(lineReq);
+    endrule
+
+    rule connectIDramCache;
+        let resp <- mainIMem.get;
+        icache.putFromMem(resp);
+    endrule
+
     rule requestI;
         let req <- rv_core.getIReq;
         if (debug) $display("Get IReq", fshow(req));
         ireq <= req;
-        bram.portB.request.put(BRAMRequestBE{
-                writeen: req.byte_en,
-                responseOnWrite: True,
-                address: truncate(req.addr >> 2),
-                datain: req.data});
+        let newreq = CacheReq{ byte_en:req.byte_en, addr:truncate(req.addr >> 2), data:req.data};
+        icache.putFromProc(newreq);
     endrule
 
     rule responseI;
-        let x <- bram.portB.response.get();
+        let x <- icache.getToProc();
         let req = ireq;
         if (debug) $display("Get IResp ", fshow(req), fshow(x));
         req.data = x;
@@ -57,14 +68,14 @@ module mktop_pipelined(Empty);
         let req <- rv_core.getDReq;
         dreq <= req;
         if (debug) $display("Get DReq", fshow(req));
-        newreq <= MainMemReq{write:1, byte_en:req.byte_en, addr:req.addr, data:req.data};
+        let newreq = CacheReq{ byte_en:req.byte_en, addr:truncate(req.addr >> 2), data:req.data};
         cache.putFromProc(newreq);
     endrule
 
     rule responseD;
         let x <- cache.getToProc();
         let req = dreq;
-        if (debug) $display("Get IResp ", fshow(req), fshow(x));
+        if (debug) $display("Get DResp ", fshow(req), fshow(x));
         req.data = x;
         rv_core.getDResp(req);
     endrule
