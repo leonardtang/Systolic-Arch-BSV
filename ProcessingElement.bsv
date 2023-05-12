@@ -1,7 +1,7 @@
 // This file describes a single Processing Element
 // It stores a current value, and adds an incoming product of elements flowing in from the top and left PE's
 
-package processing_element;
+package ProcessingElement;
 
 interface PE_interface;
     // Initialize PE 
@@ -22,7 +22,7 @@ endinterface
 
 
 (* synthesize *)
-module makePE(PE_interface);
+module mkProcessingElement(PE_interface);
 
     Reg#(int) product <- mkReg(0);
     Reg#(int) top <- mkReg(0);
@@ -38,7 +38,7 @@ module makePE(PE_interface);
     // Core Multiply and Accumulate code
     // Could be sped up potentially with binary MAC implementation instead
     rule pe_mac (received_top && received_left && on);
-        product <= product + received_top * received_left;
+        product <= product + top * left;
         done <= True; 
     endrule
 
@@ -74,7 +74,7 @@ module makePE(PE_interface);
     endmethod
 
     method int get_output if (done);
-        return product
+        return product;
     endmethod
 
 endmodule
