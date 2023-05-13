@@ -15,7 +15,7 @@ interface PE_interface;
     // Set total number of computation iterations PE is allowed to perform
     method Action set_total_iter(Int#(32) z);
     // Get PE output (value that flows down and right)
-    method int get_output();
+    method Int#(32) get_output();
     // Check if computation finished
     method Bool is_finished();
 endinterface
@@ -39,6 +39,8 @@ module mkProcessingElement(PE_interface);
     // Could be sped up potentially with binary MAC implementation instead
     rule pe_mac (received_top && received_left && on);
         product <= product + top * left;
+        received_top <= False;
+        received_left <= False;
         done <= True; 
     endrule
 
@@ -63,19 +65,21 @@ module mkProcessingElement(PE_interface);
     endmethod
 
     method Action flow_top(Int#(32) x) if (on && (iter_count < total_iters) && (!received_top));
+        $display("flow_top");
         top <= x;
         received_top <= True;
         iter_count <= iter_count + 1;
     endmethod
 
-    // Potentially hacky assumption: here we assume that flow_top and flow_left will always be called together
+    // Note that flow_top and flow_left will always be called together in SystolicArray
     // So iter_count only incremenets on pairs of calls
     method Action flow_left(Int#(32) x) if (on && (!received_left));
+        $display("flow_left");
         left <= x;
         received_left <= True;
     endmethod
 
-    method int get_output if (done);
+    method Int#(32) get_output if (done);
         return product;
     endmethod
 
