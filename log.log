@@ -1,0 +1,137 @@
+Cycle          0
+set_outfile
+init?
+init pe_receive_done:0
+init pe_op_finished:1
+Cycle          1
+pulse_data
+pulse_data pe_receive_done:
+0
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:0
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle          2
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle          3
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle          4
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle          5
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle          6
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle          7
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle          8
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle          9
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle         10
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle         11
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle         12
+pe_compute pe_receive_done:1
+pe_compute pe_op_finished:1
+pe_compute
+writing out results?
+          4	          4	          4	          4	
+          4	          4	          4	          4	
+          4	          4	          4	          4	
+          4	          4	          4	          4	
+
+

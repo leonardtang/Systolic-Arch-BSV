@@ -1,6 +1,7 @@
 // This file describes a 5 x 5 systolic array of Processing Elements
 // Notably, this is a standalone module without an interface
 
+import Ehr::*;
 import Vector::*;
 import RegFile::*;
 import ProcessingElement::*;
@@ -17,7 +18,7 @@ interface SystolicArray;
     // Initialize PE 
     // method Action init(); 
     // Reset PE value and iterations to 0
-    method Action reset_all_pe();
+    // method Action reset_all_pe();
     // method ActionValue#(Vector#(4, Int#(32))) get_row_diag(Int#(32) x);
     // method ActionValue#(Vector#(4, Int#(32))) get_col_diag(Int#(32) y);
 endinterface
@@ -36,7 +37,7 @@ module mkSystolicArray(SystolicArray);
 
     // Setting this to be True for now just to unblock for testing
     // TODO(ltang): put this into a Method that toggles False to True after getting input
-    Reg#(Bool) input_mtx_received <- mkReg(True);
+    Reg#(Bool) ready <- mkReg(True);
     // TODO(ltang): put this into a Method that toggles False to True after getting input
     Reg#(Bool) pe_op_finished <- mkReg(True);
     Reg#(Bool) pe_receive_done <- mkReg(False);
@@ -50,9 +51,11 @@ module mkSystolicArray(SystolicArray);
     Vector#(4, Vector#(4, PE_interface)) array <- replicateM(replicateM(mkProcessingElement));
     // Grid of input data that controls flow input to each PE in the array
     // Controls top-down input flow
-    Vector#(4, Vector#(4, Reg#(Int#(32)))) top <- replicateM(replicateM(mkReg(0)));
+    Vector#(4, Vector#(4, Ehr#(2, Int#(32)))) top <- replicateM(replicateM(mkEhr(0)));
     // Controls left-right input flow
-    Vector#(4, Vector#(4, Reg#(Int#(32)))) left <- replicateM(replicateM(mkReg(0)));
+    Vector#(4, Vector#(4, Ehr#(2, Int#(32)))) left <- replicateM(replicateM(mkEhr(0)));
+
+    Reg#(Int#(32)) count <- mkReg(0);
 
 
     function Vector#(4, Int#(32)) get_row_diag(Int#(32) this_pe_state);
@@ -85,6 +88,11 @@ module mkSystolicArray(SystolicArray);
     // File output
     let out_file <- mkReg(InvalidFile);
     Reg#(Bool) file_valid <- mkReg(False);
+
+    rule countCycles if (count < 50);
+        $display("Cycle", count);
+        count <= count + 1;
+    endrule
     
     rule set_outfile(file_valid == False);
         $display("set_outfile");
@@ -100,10 +108,8 @@ module mkSystolicArray(SystolicArray);
         out_file <= f;
     endrule
 
-
-    (* descending_urgency = "reset_all_pe, pulse_data" *)
     // Single pulse of the data through the array
-    rule pulse_data(input_mtx_received && !pe_receive_done && pe_op_finished);
+    rule pulse_data(!ready && pe_iter_num < max_pe_iters && pe_state == pe_iter_num);
         $display("pulse_data");
         $display("pulse_data pe_receive_done:");
         $display(pe_receive_done);
@@ -119,14 +125,14 @@ module mkSystolicArray(SystolicArray);
             // Send matrix data left-right
             for (Int#(32) i = 0; i < 4; i = i + 1) begin
                 // Pre-saturate entire left column
-                left[i][0] <= a_column[i];
+                left[i][0][0] <= a_column[i];
                 for (Int#(32) j = 1; j < 4; j = j + 1) begin
                     if (pe_state == 0) begin
                         // Before the array receives any data, set top row (except for left column) to 0
-                        left[i][j] <= 0;
+                        left[i][j][0] <= 0;
                     end else begin
                         // Pulse data rightwards
-                        left[i][j] <= left[i][j - 1];
+                        left[i][j][0] <= left[i][j - 1][0];
                     end
                 end
             end
@@ -134,77 +140,63 @@ module mkSystolicArray(SystolicArray);
             // Send matrix data top-down
             for (Int#(32) i = 0; i < 4; i = i + 1) begin
                 // Pre-saturate entire top row
-                top[0][i] <= b_row[i];
+                top[0][i][0] <= b_row[i];
                 for (Int#(32) j = 1; j < 4; j = j + 1) begin
                     if (pe_state == 0) begin
                         // Before the array receives any data, set left column (except for top row) to 0
-                        top[j][i] <= 0;
+                        top[j][i][0] <= 0;
                     end else begin
                         // Pulse data downwards
-                        top[j][i] <= top[j - 1][i];
+                        top[j][i][0] <= top[j - 1][i][0];
                     end
                 end
             end
         end else begin // All input data has flowed through entire array. Can clear input grids.
             for (Int#(32) i = 0; i < 4; i = i + 1) begin
                 for (Int#(32) j = 0; j < 4; j = j + 1) begin
-                    top[i][j] <= 0;
-                    left[i][j] <= 0;
+                    top[i][j][0] <= 0;
+                    left[i][j][0] <= 0;
                 end
             end
         end
-
-        pe_state <= pe_state + 1;
-        pe_iter_num <= pe_iter_num + 1;
         // Data grid is updated, now PEs need to receive data and compute
-        pe_receive_done <= False;
-        pe_op_finished <= False;
         $display("made it to end of pulse_data");
-
+        pe_state <= pe_state + 1;
     endrule
 
     
     // Move inputs from top/left data grid into PEs
-    rule pe_put(input_mtx_received && !pe_receive_done && !pe_op_finished);
-        $display("pe_put pe_receive_done:");
-        $display(pe_receive_done);
-        $display("pe_put pe_op_finished:");
-        $display(pe_op_finished);
+    rule pe_put(!ready && pe_iter_num < max_pe_iters);
+        $display("pe_put pe_receive_done:", pe_receive_done);
+        $display("pe_put pe_op_finished:", pe_op_finished);
         $display("pe_put");
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
             for (Int#(32) j = 0; j < 4; j = j + 1) begin  
-                array[i][j].flow_top(top[i][j]);
-                array[i][j].flow_left(left[i][j]);
+                array[i][j].flow_top(top[i][j][1]);
+                array[i][j].flow_left(left[i][j][1]);
             end
         end
         pe_receive_done <= True;
+        $display("pe_put finished");
+        pe_iter_num <= pe_iter_num + 1;
     endrule
 
 
     // One step of PE computation
-    rule pe_compute(input_mtx_received && pe_receive_done && !pe_op_finished);
-        $display("pe_compute pe_receive_done:");
-        $display(pe_receive_done);
-        $display("pe_compute pe_op_finished:");
-        $display(pe_op_finished);
+    rule pe_compute(!ready && pe_iter_num == max_pe_iters);
+        $display("pe_compute pe_receive_done:", pe_receive_done);
+        $display("pe_compute pe_op_finished:", pe_op_finished);
         $display("pe_compute");
-        // Finished a single wave of PE operations 
-        pe_op_finished <= True;
-        pe_receive_done <= False;
-
-        // End of a single A * B multiplication
-        // Write out output matrix C
-        if (pe_iter_num == max_pe_iters) begin
-            $display("writing out results?");
-            for (Int#(32) i = 0; i < 4; i = i + 1) begin
-                for (Int#(32) j = 0; j < 4; j = j + 1) begin  
-                    let c = array[i][j].get_output();
-                    $fwrite(out_file, "%d\t", c);
-                end
-                $fwrite(out_file, "\n");
+        $display("writing out results?");
+        for (Int#(32) i = 0; i < 4; i = i + 1) begin
+            for (Int#(32) j = 0; j < 4; j = j + 1) begin  
+                let c = array[i][j].get_output();
+                $fwrite(out_file, "%d\t", c);
             end
-            $fwrite(out_file, "\n\n"); 
+            $fwrite(out_file, "\n");
         end
+        $fwrite(out_file, "\n\n"); 
+        ready <= True;
 
         // End of all matrix multiplications
         if (pe_iter_num == max_global_iters) begin
@@ -214,7 +206,7 @@ module mkSystolicArray(SystolicArray);
 
 
     // method Action init(); 
-    rule init;
+    rule init(ready);
         $display("init?");
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
             for (Int#(32) j = 0; j < 4; j = j + 1) begin
@@ -222,25 +214,12 @@ module mkSystolicArray(SystolicArray);
                 array[i][j].set_total_iter(max_pe_iters);
             end
         end
-        $display("init pe_receive_done:");
-        $display(pe_receive_done);
-        $display("init pe_op_finished:");
-        $display(pe_op_finished);
+        ready <= False;
+        pe_state <= 0;
+        pe_iter_num <= 0;
+        $display("init pe_receive_done:", pe_receive_done);
+        $display("init pe_op_finished:", pe_op_finished);
     endrule
     // endmethod
-
-
-    // Reset grid for a new matrix pair (A,B)
-    method Action reset_all_pe() if (input_mtx_received && pe_op_finished && pe_state == max_pe_iters);
-        for (Int#(32) i = 0; i < 4; i = i + 1) begin
-            for (Int#(32) j = 0; j < 4; j = j + 1) begin
-                array[i][j].reset_pe();
-            end
-        end
-        pe_state <= 0;
-        // Reset happens on (max_pe_iters = max_steps + 1) pe_iters, but 
-        pe_iter_num <= pe_iter_num - 1;
-    endmethod
-
 
 endmodule
