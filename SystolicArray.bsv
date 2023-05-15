@@ -231,7 +231,7 @@ module mkSystolicArray(SystolicArray);
     method Action loadDataA(Bit#(512) data) if (ready);
         for (Integer i = 0; i < 4; i = i + 1) begin
             for (Integer j = 0; j < 4; j = j + 1) begin
-                $display("Set", data[(1 * 4 + 1 + 1) * 32 - 1:(1 * 4 + 1) * 32]);
+                // $display("Set", data[(1 * 4 + 1 + 1) * 32 - 1:(1 * 4 + 1) * 32]);
                 x1[i][j] <= unpack(data[(i * 4 + j + 1) * 32 - 1:(i * 4 + j) * 32]);
             end
         end
