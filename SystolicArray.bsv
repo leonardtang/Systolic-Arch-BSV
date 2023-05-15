@@ -216,10 +216,19 @@ module mkSystolicArray(SystolicArray);
                 array[i][j].set_total_iter(max_pe_iters);
             end
         end
+        $display("X1");
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
-            for (Int#(32) j = 0; j < 4; j = j + 1) begin
-                $display("X1", x1[i][j]);
+            for (Int#(32) j = 0; j < 4; j = j + 1) begin  
+                $fwrite(out_file, "%d\t", x1[i][j]);
             end
+            $fwrite(out_file, "\n");
+        end
+        $display("X2");
+        for (Int#(32) i = 0; i < 4; i = i + 1) begin
+            for (Int#(32) j = 0; j < 4; j = j + 1) begin  
+                $fwrite(out_file, "%d\t", x2[i][j]);
+            end
+            $fwrite(out_file, "\n");
         end
         ready <= False;
         pe_state <= 0;
@@ -232,7 +241,7 @@ module mkSystolicArray(SystolicArray);
         for (Integer i = 0; i < 4; i = i + 1) begin
             for (Integer j = 0; j < 4; j = j + 1) begin
                 // $display("Set", data[(1 * 4 + 1 + 1) * 32 - 1:(1 * 4 + 1) * 32]);
-                x1[i][j] <= unpack(data[(i * 4 + j + 1) * 32 - 1:(i * 4 + j) * 32]);
+                x2[i][j] <= unpack(data[(i * 4 + j + 1) * 32 - 1:(i * 4 + j) * 32]);
             end
         end
     endmethod
@@ -240,7 +249,7 @@ module mkSystolicArray(SystolicArray);
     method Action loadDataB(Bit#(512) data) if (ready);
         for (Integer i = 0; i < 4; i = i + 1) begin
             for (Integer j = 0; j < 4; j = j + 1) begin
-                x2[i][j] <= unpack(data[(i * 4 + j + 1) * 32 - 1:(i * 4 + j) * 32]);
+                x1[i][j] <= unpack(data[(i * 4 + j + 1) * 32 - 1:(i * 4 + j) * 32]);
             end
         end
     endmethod
