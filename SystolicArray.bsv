@@ -16,7 +16,9 @@ Int#(32) num_input_mtx = 1;
 
 interface SystolicArray;
     // Initialize PE 
-    // method Action init(); 
+    method Action init(); 
+    method Action loadDataA(Bit#(512) data);
+    method Action loadDataB(Bit#(512) data);
     // Reset PE value and iterations to 0
     // method Action reset_all_pe();
     // method ActionValue#(Vector#(4, Int#(32))) get_row_diag(Int#(32) x);
@@ -44,8 +46,8 @@ module mkSystolicArray(SystolicArray);
     Reg#(Int#(32)) pe_state <- mkReg(0);
     Reg#(Int#(32)) pe_iter_num <- mkReg(0);
 
-    Vector#(4, Vector#(4, Reg#(Int#(32)))) x1 <- replicateM(replicateM(mkReg(1)));
-    Vector#(4, Vector#(4, Reg#(Int#(32)))) x2 <- replicateM(replicateM(mkReg(1)));
+    Vector#(4, Vector#(4, Reg#(Int#(32)))) x1 <- replicateM(replicateM(mkReg(0)));
+    Vector#(4, Vector#(4, Reg#(Int#(32)))) x2 <- replicateM(replicateM(mkReg(0)));
 
     // 2D 4` x 4` grid of PEs
     Vector#(4, Vector#(4, PE_interface)) array <- replicateM(replicateM(mkProcessingElement));
@@ -89,7 +91,7 @@ module mkSystolicArray(SystolicArray);
     let out_file <- mkReg(InvalidFile);
     Reg#(Bool) file_valid <- mkReg(False);
 
-    rule countCycles if (count < 50);
+    rule countCycles if (count < 50 && !ready);
         $display("Cycle", count);
         count <= count + 1;
     endrule
@@ -206,7 +208,7 @@ module mkSystolicArray(SystolicArray);
 
 
     // method Action init(); 
-    rule init(ready);
+    method Action init() if (ready);
         $display("init?");
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
             for (Int#(32) j = 0; j < 4; j = j + 1) begin
@@ -214,12 +216,32 @@ module mkSystolicArray(SystolicArray);
                 array[i][j].set_total_iter(max_pe_iters);
             end
         end
+        for (Int#(32) i = 0; i < 4; i = i + 1) begin
+            for (Int#(32) j = 0; j < 4; j = j + 1) begin
+                $display("X1", x1[i][j]);
+            end
+        end
         ready <= False;
         pe_state <= 0;
         pe_iter_num <= 0;
         $display("init pe_receive_done:", pe_receive_done);
         $display("init pe_op_finished:", pe_op_finished);
-    endrule
-    // endmethod
+    endmethod
 
+    method Action loadDataA(Bit#(512) data) if (ready);
+        for (Integer i = 0; i < 4; i = i + 1) begin
+            for (Integer j = 0; j < 4; j = j + 1) begin
+                $display("Set", data[(1 * 4 + 1 + 1) * 32 - 1:(1 * 4 + 1) * 32]);
+                x1[i][j] <= unpack(data[(i * 4 + j + 1) * 32 - 1:(i * 4 + j) * 32]);
+            end
+        end
+    endmethod
+
+    method Action loadDataB(Bit#(512) data) if (ready);
+        for (Integer i = 0; i < 4; i = i + 1) begin
+            for (Integer j = 0; j < 4; j = j + 1) begin
+                x2[i][j] <= unpack(data[(i * 4 + j + 1) * 32 - 1:(i * 4 + j) * 32]);
+            end
+        end
+    endmethod
 endmodule

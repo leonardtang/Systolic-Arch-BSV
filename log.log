@@ -1,9 +1,60 @@
-Cycle          0
 set_outfile
+Init
+Compute
+X1
+        358	
+        818	
+        525	
+        439	
+         49	
+        600	
+        675	
+        858	
+        805	
+        861	
+        773	
+        279	
+        600	
+        233	
+        606	
+        724	
+X2
+        939	
+        690	
+        717	
+        710	
+        155	
+        180	
+        596	
+         17	
+        526	
+        898	
+        628	
+         65	
+        801	
+        829	
+        988	
+        647	
 init?
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
+X1          0
 init pe_receive_done:0
 init pe_op_finished:1
-Cycle          1
+Cycle          0
 pulse_data
 pulse_data pe_receive_done:
 0
@@ -11,6 +62,17 @@ pulse_data pe_op_finished:
 1
 made it to end of pulse_data
 pe_put pe_receive_done:0
+pe_put pe_op_finished:1
+pe_put
+pe_put finished
+Cycle          1
+pulse_data
+pulse_data pe_receive_done:
+1
+pulse_data pe_op_finished:
+1
+made it to end of pulse_data
+pe_put pe_receive_done:1
 pe_put pe_op_finished:1
 pe_put
 pe_put finished
@@ -114,24 +176,13 @@ pe_put pe_op_finished:1
 pe_put
 pe_put finished
 Cycle         11
-pulse_data
-pulse_data pe_receive_done:
-1
-pulse_data pe_op_finished:
-1
-made it to end of pulse_data
-pe_put pe_receive_done:1
-pe_put pe_op_finished:1
-pe_put
-pe_put finished
-Cycle         12
 pe_compute pe_receive_done:1
 pe_compute pe_op_finished:1
 pe_compute
 writing out results?
-          4	          4	          4	          4	
-          4	          4	          4	          4	
-          4	          4	          4	          4	
-          4	          4	          4	          4	
+          0	          0	          0	          0	
+          0	          0	          0	          0	
+          0	          0	          0	          0	
+          0	          0	          0	          0	
 
 

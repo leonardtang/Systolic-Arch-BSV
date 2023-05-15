@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := all
 BUILD_DIR=build
-BINARY_NAME=SystolicArray
+BINARY_NAME=TbMM
 BSC_FLAGS=--aggressive-conditions -vdir $(BUILD_DIR) -bdir $(BUILD_DIR) -simdir $(BUILD_DIR) -o
 
 .PHONY: clean all $(BINARY_NAME)
