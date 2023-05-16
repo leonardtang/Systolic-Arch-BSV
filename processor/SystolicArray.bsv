@@ -15,10 +15,6 @@ interface SystolicArray;
     method Action loadDataA(Bit#(512) data);
     method Action loadDataB(Bit#(512) data);
     method ActionValue#(Bit#(512)) getResults();
-    // Reset PE value and iterations to 0
-    // method Action reset_all_pe();
-    // method ActionValue#(Vector#(4, Int#(32))) get_row_diag(Int#(32) x);
-    // method ActionValue#(Vector#(4, Int#(32))) get_col_diag(Int#(32) y);
 endinterface
 
 (* synthesize *)
@@ -34,9 +30,7 @@ module mkSystolicArray(SystolicArray);
     Int#(32) max_global_iters = max_pe_iters * num_input_mtx;
 
     // Setting this to be True for now just to unblock for testing
-    // TODO(ltang): put this into a Method that toggles False to True after getting input
     Reg#(Bool) ready <- mkReg(True);
-    // TODO(ltang): put this into a Method that toggles False to True after getting input
     Reg#(Bool) pe_op_finished <- mkReg(True);
     Reg#(Bool) pe_receive_done <- mkReg(False);
     Reg#(Int#(32)) pe_state <- mkReg(0);
@@ -71,7 +65,6 @@ module mkSystolicArray(SystolicArray);
 
     
     function Vector#(4, Int#(32)) get_col_diag(Int#(32) this_pe_state);
-        // $display("get col diag?");
         Vector#(4, Int#(32)) curr_col;
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
             if (this_pe_state - i < 0 || this_pe_state - i >= 4) begin
@@ -94,7 +87,6 @@ module mkSystolicArray(SystolicArray);
     endrule
     
     rule set_outfile(file_valid == False);
-        $display("set_outfile");
         String file = "results.txt";
         File f <- $fopen(file);
         if (f == InvalidFile) begin
@@ -109,11 +101,6 @@ module mkSystolicArray(SystolicArray);
 
     // Single pulse of the data through the array
     rule pulse_data(!ready && pe_iter_num < max_pe_iters && pe_state == pe_iter_num);
-        $display("pulse_data");
-        $display("pulse_data pe_receive_done:");
-        $display(pe_receive_done);
-        $display("pulse_data pe_op_finished:");
-        $display(pe_op_finished);
         
         if (pe_state < max_steps) begin
             // Column vector (top-down flow) from left matrix
@@ -159,16 +146,12 @@ module mkSystolicArray(SystolicArray);
             end
         end
         // Data grid is updated, now PEs need to receive data and compute
-        $display("made it to end of pulse_data");
         pe_state <= pe_state + 1;
     endrule
 
     
     // Move inputs from top/left data grid into PEs
     rule pe_put(!ready && pe_iter_num < max_pe_iters);
-        $display("pe_put pe_receive_done:", pe_receive_done);
-        $display("pe_put pe_op_finished:", pe_op_finished);
-        $display("pe_put");
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
             for (Int#(32) j = 0; j < 4; j = j + 1) begin  
                 array[i][j].flow_top(top[i][j][1]);
@@ -176,17 +159,13 @@ module mkSystolicArray(SystolicArray);
             end
         end
         pe_receive_done <= True;
-        $display("pe_put finished");
         pe_iter_num <= pe_iter_num + 1;
     endrule
 
 
     // One step of PE computation
     rule pe_compute(!ready && pe_iter_num == max_pe_iters);
-        $display("pe_compute pe_receive_done:", pe_receive_done);
-        $display("pe_compute pe_op_finished:", pe_op_finished);
-        $display("pe_compute");
-        $display("writing out results?");
+        $display("Writing out results:");
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
             for (Int#(32) j = 0; j < 4; j = j + 1) begin  
                 let c = array[i][j].get_output();
@@ -202,21 +181,20 @@ module mkSystolicArray(SystolicArray);
 
     // method Action init(); 
     method Action init() if (ready);
-        $display("init?");
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
             for (Int#(32) j = 0; j < 4; j = j + 1) begin
                 array[i][j].init_pe();
                 array[i][j].set_total_iter(max_pe_iters);
             end
         end
-        $display("X1");
+        $display("Matrix X1");
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
             for (Int#(32) j = 0; j < 4; j = j + 1) begin  
                 $fwrite(out_file, "%d\t", x1[i][j]);
             end
             $fwrite(out_file, "\n");
         end
-        $display("X2");
+        $display("Matrix X2");
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
             for (Int#(32) j = 0; j < 4; j = j + 1) begin  
                 $fwrite(out_file, "%d\t", x2[i][j]);
@@ -226,14 +204,11 @@ module mkSystolicArray(SystolicArray);
         ready <= False;
         pe_state <= 0;
         pe_iter_num <= 0;
-        $display("init pe_receive_done:", pe_receive_done);
-        $display("init pe_op_finished:", pe_op_finished);
     endmethod
 
     method Action loadDataA(Bit#(512) data) if (ready);
         for (Integer i = 0; i < 4; i = i + 1) begin
             for (Integer j = 0; j < 4; j = j + 1) begin
-                // $display("Set", data[(1 * 4 + 1 + 1) * 32 - 1:(1 * 4 + 1) * 32]);
                 x2[i][j] <= unpack(data[(i * 4 + j + 1) * 32 - 1:(i * 4 + j) * 32]);
             end
         end
@@ -253,7 +228,6 @@ module mkSystolicArray(SystolicArray);
         for (Int#(32) i = 0; i < 4; i = i + 1) begin
             for (Int#(32) j = 0; j < 4; j = j + 1) begin
                 tmp = zeroExtend(pack(res[i][j]));
-                // $display("%x", tmp);
                 ret = ret + (tmp << ((i * 4 + j) * 32));
             end
         end

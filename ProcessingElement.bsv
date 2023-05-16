@@ -37,7 +37,6 @@ module mkProcessingElement(PE_interface);
     // Could be sped up potentially with binary MAC implementation instead
     rule pe_mac if (on && !done[1]);
         product <= product + top[1] * left[1];
-        // $display("Product", product);
         if (iter_count[1] >= total_iters) begin
             on <= False;
         end
@@ -45,19 +44,16 @@ module mkProcessingElement(PE_interface);
     endrule
 
     method Action init_pe() if (!on);
-        // $display("init_pe");
         on <= True;
         product <= 0;
         iter_count[1] <= 0;
     endmethod
 
     method Action set_total_iter(Int#(32) iters) if (!on);
-        // $display("set_total_iter");
         total_iters <= iters;
     endmethod
 
     method Action flow_top(Int#(32) x) if (on && iter_count[0] < total_iters);
-        // $display("flow_top");
         top[0] <= x;
         iter_count[0] <= iter_count[0] + 1;
         done[0] <= False;
@@ -66,7 +62,6 @@ module mkProcessingElement(PE_interface);
     // Note that flow_top and flow_left will always be called together in SystolicArray
     // So iter_count only incremenets on pairs of calls
     method Action flow_left(Int#(32) x) if (on && iter_count[0] < total_iters);
-        // $display("flow_left");
         left[0] <= x;
     endmethod
 
