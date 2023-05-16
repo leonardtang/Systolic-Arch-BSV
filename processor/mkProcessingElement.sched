@@ -1,0 +1,88 @@
+=== Generated schedule for mkProcessingElement ===
+
+Method schedule
+---------------
+Method: init_pe
+Ready signal: ! on
+Conflict-free: flow_top, flow_left
+Sequenced after: set_total_iter, get_output
+Conflicts: init_pe
+ 
+Method: flow_top
+Ready signal: on &&
+	      (((iter_count_readBeforeLaterWrites_0.read &&
+		 iter_count_readBeforeLaterWrites_1.read)
+		? iter_count_register
+		: (_ :: Bit 32)) .<
+	       total_iters)
+Conflict-free: init_pe, set_total_iter
+Sequenced before: get_output
+Sequenced after: flow_left
+Conflicts: flow_top
+ 
+Method: flow_left
+Ready signal: on &&
+	      (((iter_count_readBeforeLaterWrites_0.read &&
+		 iter_count_readBeforeLaterWrites_1.read)
+		? iter_count_register
+		: (_ :: Bit 32)) .<
+	       total_iters)
+Conflict-free: init_pe, set_total_iter, get_output
+Sequenced before: flow_top
+Conflicts: flow_left
+ 
+Method: set_total_iter
+Ready signal: ! on
+Conflict-free: flow_top, flow_left, get_output
+Sequenced before: init_pe
+Sequenced before (restricted): set_total_iter
+ 
+Method: get_output
+Ready signal: done_readBeforeLaterWrites_1.read
+	      ? done_port_0.whas
+		? done_port_0.wget
+		: done_register
+	      : (_ :: Bit 1)
+Conflict-free: flow_left, set_total_iter, get_output
+Sequenced before: init_pe
+Sequenced after: flow_top
+ 
+Rule schedule
+-------------
+Rule: top_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: done_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: iter_count_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: pe_mac
+Predicate: on &&
+	   (done_readBeforeLaterWrites_1.read
+	    ? done_port_0.whas
+	      ? ! done_port_0.wget
+	      : (! done_register)
+	    : (_ :: Bit 1))
+Blocking rules: (none)
+ 
+Logical execution order: flow_left,
+			 flow_top,
+			 set_total_iter,
+			 get_output,
+			 init_pe,
+			 pe_mac,
+			 top_canonicalize,
+			 left_canonicalize,
+			 done_canonicalize,
+			 iter_count_canonicalize
+
+===================================================

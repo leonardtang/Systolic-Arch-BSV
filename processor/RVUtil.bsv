@@ -464,3 +464,7 @@ function Bool isControlInst(DecodedInst dInst);
     return (dInst.inst[6:4] == 3'b110); // This also covers a reserved opcode
 endfunction
 
+function Bool isSysInst(DecodedInst dInst);
+    return (dInst.inst[6:0] == 7'b0100111); 
+endfunction
+

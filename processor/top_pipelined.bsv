@@ -16,6 +16,7 @@ module mktop_pipelined(Empty);
     RVIfc rv_core <- mkpipelined;
     Reg#(Mem) ireq <- mkRegU;
     Reg#(Mem) dreq <- mkRegU;
+    Reg#(CacheLine) linereq <- mkRegU;
     FIFO#(Mem) mmioreq <- mkFIFO;
     let debug = True;
     Reg#(Bit#(32)) cycle_count <- mkReg(0);
@@ -78,6 +79,22 @@ module mktop_pipelined(Empty);
         if (debug) $display("Get DResp ", fshow(req), fshow(x));
         req.data = x;
         rv_core.getDResp(req);
+    endrule
+
+    rule requestLine;
+        let req <- rv_core.getCacheLineReq;
+        linereq <= req;
+        if (debug) $display("Get LineReq", fshow(req));
+        let newreq = CacheReq{ byte_en:'0, addr:truncate(req.addr >> 2), data:?};
+        cache.putCacheLine(newreq);
+    endrule
+
+    rule responseLine;
+        let x <- cache.getCacheLine();
+        let req = linereq;
+        if (debug) $display("Get LineResp ", fshow(req), fshow(x));
+        req.data = x;
+        rv_core.getCacheLineResp(req);
     endrule
   
     rule requestMMIO;

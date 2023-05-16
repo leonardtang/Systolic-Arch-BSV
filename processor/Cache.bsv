@@ -9,11 +9,13 @@ import Ehr::*;
 interface Cache;
     method Action putFromProc(CacheReq e);
     method ActionValue#(CacheResp) getToProc();
+    method Action putCacheLine(CacheReq e);
+    method ActionValue#(Bit#(512)) getCacheLine();
     method ActionValue#(MainMemReq) getToMem();
     method Action putFromMem(MainMemResp e);
 endinterface
 
-typedef enum {Ready, Read, StartMiss, SendFillReq, WaitFillResp, Stb}
+typedef enum {Ready, Read, StartMiss, SendFillReq, WaitFillResp, Stb, ReadLine}
 ReqStatus deriving (Bits, Eq);
 
 module mkCache(Cache);
@@ -24,6 +26,7 @@ module mkCache(Cache);
   Vector#(128, Reg#(Bool)) dirtyArray <- replicateM(mkReg(False));
 
   FIFO#(CacheResp) hitQ <- mkBypassFIFO;
+  FIFO#(Bit#(512)) hitLineQ <- mkBypassFIFO;
   Reg#(CacheReq) hitReq <- mkRegU;
   Reg#(CacheReq) missReq <- mkRegU;
   Reg#(ReqStatus) mshr <- mkReg(Ready);
@@ -77,22 +80,23 @@ module mkCache(Cache);
       Bit#(64) byte_en = { 0, missReq.byte_en };
       Bit#(512) new_data = { 0, missReq.data };
       byte_en = byte_en << (4 * offset);
+      $display("Write %x", new_data);
       new_data = new_data << (32 * offset);
-      $display("%x", byte_en);
+      $display("%x", new_data);
       Bit#(64) byte_tmp = -1;
       if (offset != 0) begin
         Bit#(512) tmp = (data << (512 - 32 * offset)) >> (512 - 32 * offset);
         new_data = new_data | tmp;
         Bit#(64) byte_tmp = (byte_tmp << (64 - 4 * offset)) >> (64 - 4 * offset);
         byte_en = byte_en | byte_tmp;
-        $display("%x", (byte_tmp << (64 - 4 * offset)) >> (64 - 4 * offset));
+        $display("%x", (data << (512 - 32 * offset)) >> (512 - 32 * offset));
       end
       if (offset != 15) begin
         Bit#(512) tmp = (data >> (32 * offset + 32)) << (32 * offset + 32);
         new_data = new_data | tmp;
         Bit#(64) byte_tmp = (byte_tmp >> (4 * offset + 4)) << (4 * offset + 4);
         byte_en = byte_en | byte_tmp;
-        $display("%x", (byte_tmp >> (4 * offset + 4)) << (4 * offset + 4));
+        $display("%x", (data >> (32 * offset + 32)) << (32 * offset + 32));
       end
       $display("Write %x %x", byte_en, new_data);
       cache.portA.request.put(BRAMRequestBE{writeen: byte_en, // False for read
@@ -172,6 +176,14 @@ module mkCache(Cache);
     mshr <= Ready;
   endrule
 
+  rule readLine if (mshr == ReadLine);
+    MainMemResp data = 0;
+    data <- cache.portB.response.get();
+    // $display("The cache answered %x", data);
+    hitLineQ.enq(data);
+    mshr <= Ready;
+  endrule
+
   method Action putFromProc(CacheReq e) if (mshr == Ready);
     LineAddr addr = truncate(e.addr >> 4);
     $display("Cache %x", addr);
@@ -236,6 +248,27 @@ module mkCache(Cache);
         mshr <= StartMiss;
       end
     end
+  endmethod
+
+  method Action putCacheLine(CacheReq e) if (mshr == Ready);
+    lockL1[0] <= True;
+    LineAddr addr = truncate(e.addr >> 4);
+    $display("Cache %x", addr);
+    let offset = e.addr % 16;
+    let data = e.data;
+    Int#(26) idx = unpack(addr % 128);
+    // $display("Recieved Hit %x %x %x %x %x", idx, tagArray[idx], write, addr, data);
+    cache.portB.request.put(BRAMRequestBE{writeen: 0, // False for read
+                            responseOnWrite: False,
+                            address: idx,
+                            datain: ?});
+    mshr <= ReadLine;
+  endmethod
+
+  method ActionValue#(Bit#(512)) getCacheLine();
+    let data = hitLineQ.first();
+    hitLineQ.deq();
+    return data;
   endmethod
 
   method ActionValue#(CacheResp) getToProc();

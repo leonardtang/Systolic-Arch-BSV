@@ -2,58 +2,37 @@
 
 Method schedule
 ---------------
-Method: putFromProcData
-Ready signal: ! dataQ_rv.port0__read[66]
-Conflict-free: putFromProcInst,
-	       getToProcData,
-	       getToProcInst,
-	       getToMem,
-	       putFromMem
-Conflicts: putFromProcData
+Method: putFromProc
+Ready signal: (mshr == 3'd0) &&
+	      ((! stb.notEmpty) || stb.i_notEmpty) &&
+	      (cache_serverAdapterA_cnt .< 3'd3) &&
+	      stb.i_notFull
+Conflict-free: getToProc, getCacheLine, getToMem, putFromMem
+Conflicts: putFromProc, putCacheLine
  
-Method: putFromProcInst
-Ready signal: ! instQ_rv.port0__read[66]
-Conflict-free: putFromProcData,
-	       getToProcData,
-	       getToProcInst,
-	       getToMem,
-	       putFromMem
-Conflicts: putFromProcInst
+Method: getToProc
+Ready signal: hitQ_rv.port1__read[32]
+Conflict-free: putFromProc, putCacheLine, getCacheLine, getToMem, putFromMem
+Conflicts: getToProc
  
-Method: getToProcData
-Ready signal: hitDataQ_rv.port1__read[32]
-Conflict-free: putFromProcData,
-	       putFromProcInst,
-	       getToProcInst,
-	       getToMem,
-	       putFromMem
-Conflicts: getToProcData
+Method: putCacheLine
+Ready signal: (mshr == 3'd0) && (cache_serverAdapterB_cnt .< 3'd3)
+Conflict-free: getToProc, getCacheLine, getToMem, putFromMem
+Conflicts: putFromProc, putCacheLine
  
-Method: getToProcInst
-Ready signal: hitInstQ_rv.port1__read[32]
-Conflict-free: putFromProcData,
-	       putFromProcInst,
-	       getToProcData,
-	       getToMem,
-	       putFromMem
-Conflicts: getToProcInst
+Method: getCacheLine
+Ready signal: hitLineQ_rv.port1__read[512]
+Conflict-free: putFromProc, getToProc, putCacheLine, getToMem, putFromMem
+Conflicts: getCacheLine
  
 Method: getToMem
 Ready signal: memReqQ.i_notEmpty
-Conflict-free: putFromProcData,
-	       putFromProcInst,
-	       getToProcData,
-	       getToProcInst,
-	       putFromMem
+Conflict-free: putFromProc, getToProc, putCacheLine, getCacheLine, putFromMem
 Conflicts: getToMem
  
 Method: putFromMem
 Ready signal: memRespQ.i_notFull
-Conflict-free: putFromProcData,
-	       putFromProcInst,
-	       getToProcData,
-	       getToProcInst,
-	       getToMem
+Conflict-free: putFromProc, getToProc, putCacheLine, getCacheLine, getToMem
 Conflicts: putFromMem
  
 Rule schedule
@@ -412,10 +391,7 @@ Blocking rules: (none)
 Rule: waitFillResp
 Predicate: memRespQ.i_notEmpty &&
 	   (cache_serverAdapterA_cnt .< 3'd3) &&
-	   ((! (missReq[65:62] == 4'd0)) ||
-	    (reqType
-	     ? ! hitInstQ_rv.port0__read[32]
-	     : (! hitDataQ_rv.port0__read[32]))) &&
+	   ((! (missReq[65:62] == 4'd0)) || (! hitQ_rv.port0__read[32])) &&
 	   (mshr == 3'd4)
 Blocking rules: (none)
  
@@ -423,9 +399,7 @@ Rule: read
 Predicate: cache_serverAdapterA_outData_beforeDeq.read &&
 	   (cache_serverAdapterA_outData_ff.i_notEmpty ||
 	    cache_serverAdapterA_outData_enqw.whas) &&
-	   (reqType
-	    ? ! hitInstQ_rv.port0__read[32]
-	    : (! hitDataQ_rv.port0__read[32])) &&
+	   (! hitQ_rv.port0__read[32]) &&
 	   (mshr == 3'd1)
 Blocking rules: (none)
  
@@ -828,883 +802,39 @@ Predicate: stb.i_notEmpty &&
 	      ? ! lockL1_port_0.wget
 	      : (! lockL1_register)
 	    : (_ :: Bit 1))
-Blocking rules: putFromProc
+Blocking rules: putCacheLine, putFromProc
  
 Rule: clearL1Lock
 Predicate: True
 Blocking rules: (none)
  
 Rule: stbRead
-Predicate: (reqType
-	    ? ! hitInstQ_rv.port0__read[32]
-	    : (! hitDataQ_rv.port0__read[32])) &&
-	   (mshr == 3'd5)
+Predicate: (! hitQ_rv.port0__read[32]) && (mshr == 3'd5)
 Blocking rules: (none)
  
-Rule: putFromProc
-Predicate: (reqType
-	    ? False || dataQ_rv.port1__read[66]
-	    : instQ_rv.port1__read[66]) &&
-	   (((reqType
-	      ? reqType
-		? dataQ_rv.port1__read[65:62]
-		: (_ :: Bit 4)
-	      : instQ_rv.port1__read[65:62]) ==
-	     4'd0)
-	    ? ((! stb.notEmpty) || stb.i_notEmpty) &&
-	      ((stb.notEmpty &&
-		(stb.first[61:36] ==
-		 (reqType
-		  ? reqType
-		    ? dataQ_rv.port1__read[61:32]
-		    : (_ :: Bit 30)
-		  : instQ_rv.port1__read[61:32])[29:4]))
-	       ? (False || stb.i_notEmpty) &&
-		 (((stb.notEmpty
-		    ? stb.first[65:62]
-		    : (_ :: Bit 4)) ==
-		   4'd15) ||
-		  (((reqType
-		     ? reqType
-		       ? dataQ_rv.port1__read[61:32]
-		       : (_ :: Bit 30)
-		     : instQ_rv.port1__read[61:32])[29:4] ==
-		    (PrimArrayDynSelect (PrimBuildArray tagArray_0
-							tagArray_1
-							tagArray_2
-							tagArray_3
-							tagArray_4
-							tagArray_5
-							tagArray_6
-							tagArray_7
-							tagArray_8
-							tagArray_9
-							tagArray_10
-							tagArray_11
-							tagArray_12
-							tagArray_13
-							tagArray_14
-							tagArray_15
-							tagArray_16
-							tagArray_17
-							tagArray_18
-							tagArray_19
-							tagArray_20
-							tagArray_21
-							tagArray_22
-							tagArray_23
-							tagArray_24
-							tagArray_25
-							tagArray_26
-							tagArray_27
-							tagArray_28
-							tagArray_29
-							tagArray_30
-							tagArray_31
-							tagArray_32
-							tagArray_33
-							tagArray_34
-							tagArray_35
-							tagArray_36
-							tagArray_37
-							tagArray_38
-							tagArray_39
-							tagArray_40
-							tagArray_41
-							tagArray_42
-							tagArray_43
-							tagArray_44
-							tagArray_45
-							tagArray_46
-							tagArray_47
-							tagArray_48
-							tagArray_49
-							tagArray_50
-							tagArray_51
-							tagArray_52
-							tagArray_53
-							tagArray_54
-							tagArray_55
-							tagArray_56
-							tagArray_57
-							tagArray_58
-							tagArray_59
-							tagArray_60
-							tagArray_61
-							tagArray_62
-							tagArray_63
-							tagArray_64
-							tagArray_65
-							tagArray_66
-							tagArray_67
-							tagArray_68
-							tagArray_69
-							tagArray_70
-							tagArray_71
-							tagArray_72
-							tagArray_73
-							tagArray_74
-							tagArray_75
-							tagArray_76
-							tagArray_77
-							tagArray_78
-							tagArray_79
-							tagArray_80
-							tagArray_81
-							tagArray_82
-							tagArray_83
-							tagArray_84
-							tagArray_85
-							tagArray_86
-							tagArray_87
-							tagArray_88
-							tagArray_89
-							tagArray_90
-							tagArray_91
-							tagArray_92
-							tagArray_93
-							tagArray_94
-							tagArray_95
-							tagArray_96
-							tagArray_97
-							tagArray_98
-							tagArray_99
-							tagArray_100
-							tagArray_101
-							tagArray_102
-							tagArray_103
-							tagArray_104
-							tagArray_105
-							tagArray_106
-							tagArray_107
-							tagArray_108
-							tagArray_109
-							tagArray_110
-							tagArray_111
-							tagArray_112
-							tagArray_113
-							tagArray_114
-							tagArray_115
-							tagArray_116
-							tagArray_117
-							tagArray_118
-							tagArray_119
-							tagArray_120
-							tagArray_121
-							tagArray_122
-							tagArray_123
-							tagArray_124
-							tagArray_125
-							tagArray_126
-							tagArray_127)
-					{19'd0, (reqType
-						 ? reqType
-						   ? dataQ_rv.port1__read[61:32]
-						   : (_ :: Bit 30)
-						 : instQ_rv.port1__read[61:32])[10:4]}))
-		   ? cache_serverAdapterA_cnt .< 3'd3
-		   : ((reqType
-		       ? ! dataQ_rv.port1__read[66]
-		       : (! instQ_rv.port1__read[66])) ||
-		      ((PrimArrayDynSelect (PrimBuildArray tagArray_0
-							   tagArray_1
-							   tagArray_2
-							   tagArray_3
-							   tagArray_4
-							   tagArray_5
-							   tagArray_6
-							   tagArray_7
-							   tagArray_8
-							   tagArray_9
-							   tagArray_10
-							   tagArray_11
-							   tagArray_12
-							   tagArray_13
-							   tagArray_14
-							   tagArray_15
-							   tagArray_16
-							   tagArray_17
-							   tagArray_18
-							   tagArray_19
-							   tagArray_20
-							   tagArray_21
-							   tagArray_22
-							   tagArray_23
-							   tagArray_24
-							   tagArray_25
-							   tagArray_26
-							   tagArray_27
-							   tagArray_28
-							   tagArray_29
-							   tagArray_30
-							   tagArray_31
-							   tagArray_32
-							   tagArray_33
-							   tagArray_34
-							   tagArray_35
-							   tagArray_36
-							   tagArray_37
-							   tagArray_38
-							   tagArray_39
-							   tagArray_40
-							   tagArray_41
-							   tagArray_42
-							   tagArray_43
-							   tagArray_44
-							   tagArray_45
-							   tagArray_46
-							   tagArray_47
-							   tagArray_48
-							   tagArray_49
-							   tagArray_50
-							   tagArray_51
-							   tagArray_52
-							   tagArray_53
-							   tagArray_54
-							   tagArray_55
-							   tagArray_56
-							   tagArray_57
-							   tagArray_58
-							   tagArray_59
-							   tagArray_60
-							   tagArray_61
-							   tagArray_62
-							   tagArray_63
-							   tagArray_64
-							   tagArray_65
-							   tagArray_66
-							   tagArray_67
-							   tagArray_68
-							   tagArray_69
-							   tagArray_70
-							   tagArray_71
-							   tagArray_72
-							   tagArray_73
-							   tagArray_74
-							   tagArray_75
-							   tagArray_76
-							   tagArray_77
-							   tagArray_78
-							   tagArray_79
-							   tagArray_80
-							   tagArray_81
-							   tagArray_82
-							   tagArray_83
-							   tagArray_84
-							   tagArray_85
-							   tagArray_86
-							   tagArray_87
-							   tagArray_88
-							   tagArray_89
-							   tagArray_90
-							   tagArray_91
-							   tagArray_92
-							   tagArray_93
-							   tagArray_94
-							   tagArray_95
-							   tagArray_96
-							   tagArray_97
-							   tagArray_98
-							   tagArray_99
-							   tagArray_100
-							   tagArray_101
-							   tagArray_102
-							   tagArray_103
-							   tagArray_104
-							   tagArray_105
-							   tagArray_106
-							   tagArray_107
-							   tagArray_108
-							   tagArray_109
-							   tagArray_110
-							   tagArray_111
-							   tagArray_112
-							   tagArray_113
-							   tagArray_114
-							   tagArray_115
-							   tagArray_116
-							   tagArray_117
-							   tagArray_118
-							   tagArray_119
-							   tagArray_120
-							   tagArray_121
-							   tagArray_122
-							   tagArray_123
-							   tagArray_124
-							   tagArray_125
-							   tagArray_126
-							   tagArray_127)
-					   {19'd0, (reqType
-						    ? reqType
-						      ? dataQ_rv.port1__read[61:32]
-						      : (_ :: Bit 30)
-						    : instQ_rv.port1__read[61:32])[10:4]}) ==
-		       26'd67108863) ||
-		      (! (PrimArrayDynSelect (PrimBuildArray dirtyArray_0
-							     dirtyArray_1
-							     dirtyArray_2
-							     dirtyArray_3
-							     dirtyArray_4
-							     dirtyArray_5
-							     dirtyArray_6
-							     dirtyArray_7
-							     dirtyArray_8
-							     dirtyArray_9
-							     dirtyArray_10
-							     dirtyArray_11
-							     dirtyArray_12
-							     dirtyArray_13
-							     dirtyArray_14
-							     dirtyArray_15
-							     dirtyArray_16
-							     dirtyArray_17
-							     dirtyArray_18
-							     dirtyArray_19
-							     dirtyArray_20
-							     dirtyArray_21
-							     dirtyArray_22
-							     dirtyArray_23
-							     dirtyArray_24
-							     dirtyArray_25
-							     dirtyArray_26
-							     dirtyArray_27
-							     dirtyArray_28
-							     dirtyArray_29
-							     dirtyArray_30
-							     dirtyArray_31
-							     dirtyArray_32
-							     dirtyArray_33
-							     dirtyArray_34
-							     dirtyArray_35
-							     dirtyArray_36
-							     dirtyArray_37
-							     dirtyArray_38
-							     dirtyArray_39
-							     dirtyArray_40
-							     dirtyArray_41
-							     dirtyArray_42
-							     dirtyArray_43
-							     dirtyArray_44
-							     dirtyArray_45
-							     dirtyArray_46
-							     dirtyArray_47
-							     dirtyArray_48
-							     dirtyArray_49
-							     dirtyArray_50
-							     dirtyArray_51
-							     dirtyArray_52
-							     dirtyArray_53
-							     dirtyArray_54
-							     dirtyArray_55
-							     dirtyArray_56
-							     dirtyArray_57
-							     dirtyArray_58
-							     dirtyArray_59
-							     dirtyArray_60
-							     dirtyArray_61
-							     dirtyArray_62
-							     dirtyArray_63
-							     dirtyArray_64
-							     dirtyArray_65
-							     dirtyArray_66
-							     dirtyArray_67
-							     dirtyArray_68
-							     dirtyArray_69
-							     dirtyArray_70
-							     dirtyArray_71
-							     dirtyArray_72
-							     dirtyArray_73
-							     dirtyArray_74
-							     dirtyArray_75
-							     dirtyArray_76
-							     dirtyArray_77
-							     dirtyArray_78
-							     dirtyArray_79
-							     dirtyArray_80
-							     dirtyArray_81
-							     dirtyArray_82
-							     dirtyArray_83
-							     dirtyArray_84
-							     dirtyArray_85
-							     dirtyArray_86
-							     dirtyArray_87
-							     dirtyArray_88
-							     dirtyArray_89
-							     dirtyArray_90
-							     dirtyArray_91
-							     dirtyArray_92
-							     dirtyArray_93
-							     dirtyArray_94
-							     dirtyArray_95
-							     dirtyArray_96
-							     dirtyArray_97
-							     dirtyArray_98
-							     dirtyArray_99
-							     dirtyArray_100
-							     dirtyArray_101
-							     dirtyArray_102
-							     dirtyArray_103
-							     dirtyArray_104
-							     dirtyArray_105
-							     dirtyArray_106
-							     dirtyArray_107
-							     dirtyArray_108
-							     dirtyArray_109
-							     dirtyArray_110
-							     dirtyArray_111
-							     dirtyArray_112
-							     dirtyArray_113
-							     dirtyArray_114
-							     dirtyArray_115
-							     dirtyArray_116
-							     dirtyArray_117
-							     dirtyArray_118
-							     dirtyArray_119
-							     dirtyArray_120
-							     dirtyArray_121
-							     dirtyArray_122
-							     dirtyArray_123
-							     dirtyArray_124
-							     dirtyArray_125
-							     dirtyArray_126
-							     dirtyArray_127)
-					     {19'd0, (reqType
-						      ? reqType
-							? dataQ_rv.port1__read[61:32]
-							: (_ :: Bit 30)
-						      : instQ_rv.port1__read[61:32])[10:4]})) ||
-		      (cache_serverAdapterA_cnt .< 3'd3))))
-	       : (((reqType
-		    ? reqType
-		      ? dataQ_rv.port1__read[61:32]
-		      : (_ :: Bit 30)
-		    : instQ_rv.port1__read[61:32])[29:4] ==
-		   (PrimArrayDynSelect (PrimBuildArray tagArray_0
-						       tagArray_1
-						       tagArray_2
-						       tagArray_3
-						       tagArray_4
-						       tagArray_5
-						       tagArray_6
-						       tagArray_7
-						       tagArray_8
-						       tagArray_9
-						       tagArray_10
-						       tagArray_11
-						       tagArray_12
-						       tagArray_13
-						       tagArray_14
-						       tagArray_15
-						       tagArray_16
-						       tagArray_17
-						       tagArray_18
-						       tagArray_19
-						       tagArray_20
-						       tagArray_21
-						       tagArray_22
-						       tagArray_23
-						       tagArray_24
-						       tagArray_25
-						       tagArray_26
-						       tagArray_27
-						       tagArray_28
-						       tagArray_29
-						       tagArray_30
-						       tagArray_31
-						       tagArray_32
-						       tagArray_33
-						       tagArray_34
-						       tagArray_35
-						       tagArray_36
-						       tagArray_37
-						       tagArray_38
-						       tagArray_39
-						       tagArray_40
-						       tagArray_41
-						       tagArray_42
-						       tagArray_43
-						       tagArray_44
-						       tagArray_45
-						       tagArray_46
-						       tagArray_47
-						       tagArray_48
-						       tagArray_49
-						       tagArray_50
-						       tagArray_51
-						       tagArray_52
-						       tagArray_53
-						       tagArray_54
-						       tagArray_55
-						       tagArray_56
-						       tagArray_57
-						       tagArray_58
-						       tagArray_59
-						       tagArray_60
-						       tagArray_61
-						       tagArray_62
-						       tagArray_63
-						       tagArray_64
-						       tagArray_65
-						       tagArray_66
-						       tagArray_67
-						       tagArray_68
-						       tagArray_69
-						       tagArray_70
-						       tagArray_71
-						       tagArray_72
-						       tagArray_73
-						       tagArray_74
-						       tagArray_75
-						       tagArray_76
-						       tagArray_77
-						       tagArray_78
-						       tagArray_79
-						       tagArray_80
-						       tagArray_81
-						       tagArray_82
-						       tagArray_83
-						       tagArray_84
-						       tagArray_85
-						       tagArray_86
-						       tagArray_87
-						       tagArray_88
-						       tagArray_89
-						       tagArray_90
-						       tagArray_91
-						       tagArray_92
-						       tagArray_93
-						       tagArray_94
-						       tagArray_95
-						       tagArray_96
-						       tagArray_97
-						       tagArray_98
-						       tagArray_99
-						       tagArray_100
-						       tagArray_101
-						       tagArray_102
-						       tagArray_103
-						       tagArray_104
-						       tagArray_105
-						       tagArray_106
-						       tagArray_107
-						       tagArray_108
-						       tagArray_109
-						       tagArray_110
-						       tagArray_111
-						       tagArray_112
-						       tagArray_113
-						       tagArray_114
-						       tagArray_115
-						       tagArray_116
-						       tagArray_117
-						       tagArray_118
-						       tagArray_119
-						       tagArray_120
-						       tagArray_121
-						       tagArray_122
-						       tagArray_123
-						       tagArray_124
-						       tagArray_125
-						       tagArray_126
-						       tagArray_127)
-				       {19'd0, (reqType
-						? reqType
-						  ? dataQ_rv.port1__read[61:32]
-						  : (_ :: Bit 30)
-						: instQ_rv.port1__read[61:32])[10:4]}))
-		  ? cache_serverAdapterA_cnt .< 3'd3
-		  : ((reqType
-		      ? ! dataQ_rv.port1__read[66]
-		      : (! instQ_rv.port1__read[66])) ||
-		     ((PrimArrayDynSelect (PrimBuildArray tagArray_0
-							  tagArray_1
-							  tagArray_2
-							  tagArray_3
-							  tagArray_4
-							  tagArray_5
-							  tagArray_6
-							  tagArray_7
-							  tagArray_8
-							  tagArray_9
-							  tagArray_10
-							  tagArray_11
-							  tagArray_12
-							  tagArray_13
-							  tagArray_14
-							  tagArray_15
-							  tagArray_16
-							  tagArray_17
-							  tagArray_18
-							  tagArray_19
-							  tagArray_20
-							  tagArray_21
-							  tagArray_22
-							  tagArray_23
-							  tagArray_24
-							  tagArray_25
-							  tagArray_26
-							  tagArray_27
-							  tagArray_28
-							  tagArray_29
-							  tagArray_30
-							  tagArray_31
-							  tagArray_32
-							  tagArray_33
-							  tagArray_34
-							  tagArray_35
-							  tagArray_36
-							  tagArray_37
-							  tagArray_38
-							  tagArray_39
-							  tagArray_40
-							  tagArray_41
-							  tagArray_42
-							  tagArray_43
-							  tagArray_44
-							  tagArray_45
-							  tagArray_46
-							  tagArray_47
-							  tagArray_48
-							  tagArray_49
-							  tagArray_50
-							  tagArray_51
-							  tagArray_52
-							  tagArray_53
-							  tagArray_54
-							  tagArray_55
-							  tagArray_56
-							  tagArray_57
-							  tagArray_58
-							  tagArray_59
-							  tagArray_60
-							  tagArray_61
-							  tagArray_62
-							  tagArray_63
-							  tagArray_64
-							  tagArray_65
-							  tagArray_66
-							  tagArray_67
-							  tagArray_68
-							  tagArray_69
-							  tagArray_70
-							  tagArray_71
-							  tagArray_72
-							  tagArray_73
-							  tagArray_74
-							  tagArray_75
-							  tagArray_76
-							  tagArray_77
-							  tagArray_78
-							  tagArray_79
-							  tagArray_80
-							  tagArray_81
-							  tagArray_82
-							  tagArray_83
-							  tagArray_84
-							  tagArray_85
-							  tagArray_86
-							  tagArray_87
-							  tagArray_88
-							  tagArray_89
-							  tagArray_90
-							  tagArray_91
-							  tagArray_92
-							  tagArray_93
-							  tagArray_94
-							  tagArray_95
-							  tagArray_96
-							  tagArray_97
-							  tagArray_98
-							  tagArray_99
-							  tagArray_100
-							  tagArray_101
-							  tagArray_102
-							  tagArray_103
-							  tagArray_104
-							  tagArray_105
-							  tagArray_106
-							  tagArray_107
-							  tagArray_108
-							  tagArray_109
-							  tagArray_110
-							  tagArray_111
-							  tagArray_112
-							  tagArray_113
-							  tagArray_114
-							  tagArray_115
-							  tagArray_116
-							  tagArray_117
-							  tagArray_118
-							  tagArray_119
-							  tagArray_120
-							  tagArray_121
-							  tagArray_122
-							  tagArray_123
-							  tagArray_124
-							  tagArray_125
-							  tagArray_126
-							  tagArray_127)
-					  {19'd0, (reqType
-						   ? reqType
-						     ? dataQ_rv.port1__read[61:32]
-						     : (_ :: Bit 30)
-						   : instQ_rv.port1__read[61:32])[10:4]}) ==
-		      26'd67108863) ||
-		     (! (PrimArrayDynSelect (PrimBuildArray dirtyArray_0
-							    dirtyArray_1
-							    dirtyArray_2
-							    dirtyArray_3
-							    dirtyArray_4
-							    dirtyArray_5
-							    dirtyArray_6
-							    dirtyArray_7
-							    dirtyArray_8
-							    dirtyArray_9
-							    dirtyArray_10
-							    dirtyArray_11
-							    dirtyArray_12
-							    dirtyArray_13
-							    dirtyArray_14
-							    dirtyArray_15
-							    dirtyArray_16
-							    dirtyArray_17
-							    dirtyArray_18
-							    dirtyArray_19
-							    dirtyArray_20
-							    dirtyArray_21
-							    dirtyArray_22
-							    dirtyArray_23
-							    dirtyArray_24
-							    dirtyArray_25
-							    dirtyArray_26
-							    dirtyArray_27
-							    dirtyArray_28
-							    dirtyArray_29
-							    dirtyArray_30
-							    dirtyArray_31
-							    dirtyArray_32
-							    dirtyArray_33
-							    dirtyArray_34
-							    dirtyArray_35
-							    dirtyArray_36
-							    dirtyArray_37
-							    dirtyArray_38
-							    dirtyArray_39
-							    dirtyArray_40
-							    dirtyArray_41
-							    dirtyArray_42
-							    dirtyArray_43
-							    dirtyArray_44
-							    dirtyArray_45
-							    dirtyArray_46
-							    dirtyArray_47
-							    dirtyArray_48
-							    dirtyArray_49
-							    dirtyArray_50
-							    dirtyArray_51
-							    dirtyArray_52
-							    dirtyArray_53
-							    dirtyArray_54
-							    dirtyArray_55
-							    dirtyArray_56
-							    dirtyArray_57
-							    dirtyArray_58
-							    dirtyArray_59
-							    dirtyArray_60
-							    dirtyArray_61
-							    dirtyArray_62
-							    dirtyArray_63
-							    dirtyArray_64
-							    dirtyArray_65
-							    dirtyArray_66
-							    dirtyArray_67
-							    dirtyArray_68
-							    dirtyArray_69
-							    dirtyArray_70
-							    dirtyArray_71
-							    dirtyArray_72
-							    dirtyArray_73
-							    dirtyArray_74
-							    dirtyArray_75
-							    dirtyArray_76
-							    dirtyArray_77
-							    dirtyArray_78
-							    dirtyArray_79
-							    dirtyArray_80
-							    dirtyArray_81
-							    dirtyArray_82
-							    dirtyArray_83
-							    dirtyArray_84
-							    dirtyArray_85
-							    dirtyArray_86
-							    dirtyArray_87
-							    dirtyArray_88
-							    dirtyArray_89
-							    dirtyArray_90
-							    dirtyArray_91
-							    dirtyArray_92
-							    dirtyArray_93
-							    dirtyArray_94
-							    dirtyArray_95
-							    dirtyArray_96
-							    dirtyArray_97
-							    dirtyArray_98
-							    dirtyArray_99
-							    dirtyArray_100
-							    dirtyArray_101
-							    dirtyArray_102
-							    dirtyArray_103
-							    dirtyArray_104
-							    dirtyArray_105
-							    dirtyArray_106
-							    dirtyArray_107
-							    dirtyArray_108
-							    dirtyArray_109
-							    dirtyArray_110
-							    dirtyArray_111
-							    dirtyArray_112
-							    dirtyArray_113
-							    dirtyArray_114
-							    dirtyArray_115
-							    dirtyArray_116
-							    dirtyArray_117
-							    dirtyArray_118
-							    dirtyArray_119
-							    dirtyArray_120
-							    dirtyArray_121
-							    dirtyArray_122
-							    dirtyArray_123
-							    dirtyArray_124
-							    dirtyArray_125
-							    dirtyArray_126
-							    dirtyArray_127)
-					    {19'd0, (reqType
-						     ? reqType
-						       ? dataQ_rv.port1__read[61:32]
-						       : (_ :: Bit 30)
-						     : instQ_rv.port1__read[61:32])[10:4]})) ||
-		     (cache_serverAdapterA_cnt .< 3'd3))))
-	    : stb.i_notFull) &&
-	   (mshr == 3'd0)
+Rule: readLine
+Predicate: cache_serverAdapterB_outData_beforeDeq.read &&
+	   (cache_serverAdapterB_outData_ff.i_notEmpty ||
+	    cache_serverAdapterB_outData_enqw.whas) &&
+	   (! hitLineQ_rv.port0__read[512]) &&
+	   (mshr == 3'd6)
 Blocking rules: (none)
  
-Logical execution order: putFromProcData,
-			 putFromProcInst,
+Logical execution order: putFromProc,
+			 putCacheLine,
 			 getToMem,
 			 putFromMem,
 			 sendFillReq,
 			 waitFillResp,
-			 stbRead,
-			 putFromProc,
 			 mvStbToL1,
 			 clearL1Lock,
+			 stbRead,
 			 cache_serverAdapterA_stageReadResponseAlways,
 			 cache_serverAdapterA_overRun,
 			 cache_serverAdapterA_moveToOutFIFO,
 			 startMiss,
 			 read,
-			 getToProcData,
-			 getToProcInst,
+			 getToProc,
 			 cache_serverAdapterA_outData_enqueue,
 			 cache_serverAdapterA_outData_dequeue,
 			 cache_serverAdapterA_cnt_finalAdd,
@@ -1712,6 +842,8 @@ Logical execution order: putFromProcData,
 			 cache_serverAdapterB_stageReadResponseAlways,
 			 cache_serverAdapterB_overRun,
 			 cache_serverAdapterB_moveToOutFIFO,
+			 readLine,
+			 getCacheLine,
 			 cache_serverAdapterB_outData_enqueue,
 			 cache_serverAdapterB_outData_dequeue,
 			 cache_serverAdapterB_cnt_finalAdd,

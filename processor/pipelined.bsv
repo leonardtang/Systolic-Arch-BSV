@@ -6,8 +6,10 @@ import Vector::*;
 import KonataHelper::*;
 import Printf::*;
 import Ehr::*;
+import SystolicArray::*;
 
 typedef struct { Bit#(4) byte_en; Bit#(32) addr; Bit#(32) data; } Mem deriving (Eq, FShow, Bits);
+typedef struct { Bit#(32) addr; Bit#(512) data; } CacheLine deriving (Eq, FShow, Bits);
 
 interface RVIfc;
     method ActionValue#(Mem) getIReq();
@@ -16,6 +18,8 @@ interface RVIfc;
     method Action getDResp(Mem a);
     method ActionValue#(Mem) getMMIOReq();
     method Action getMMIOResp(Mem a);
+    method ActionValue#(CacheLine) getCacheLineReq();
+    method Action getCacheLineResp(CacheLine a);
 endinterface
 typedef struct { Bool isUnsigned; Bit#(2) size; Bit#(2) offset; Bool mmio; } MemBusiness deriving (Eq, FShow, Bits);
 
@@ -64,6 +68,8 @@ module mkpipelined(RVIfc);
     FIFO#(Mem) fromDmem <- mkBypassFIFO;
     FIFO#(Mem) toMMIO <- mkBypassFIFO;
     FIFO#(Mem) fromMMIO <- mkBypassFIFO;
+    FIFO#(CacheLine) toCache <- mkBypassFIFO;
+    FIFO#(CacheLine) fromCache <- mkBypassFIFO;
 
     // Registers and queues
     Vector#(32, Ehr#(2, Bit#(32))) rf <- replicateM(mkEhr(0));
@@ -86,8 +92,14 @@ module mkpipelined(RVIfc);
 	FIFO#(KonataId) retired <- mkFIFO;
 	FIFO#(KonataId) squashed <- mkFIFO;
 
+    Reg#(Int#(32)) systolic <- mkReg(0);
+    Reg#(Bit#(32)) addr2 <- mkReg(0);
+    Reg#(Bit#(512)) matrix1 <- mkReg(0);
     
     Reg#(Bool) starting <- mkReg(True);
+
+    SystolicArray arr <- mkSystolicArray;
+
 	rule do_tic_logging if (counter[1] < 100);
         if (starting) begin
             let f <- $fopen(dumpFile, "w") ;
@@ -133,7 +145,7 @@ module mkpipelined(RVIfc);
         let instr = resp.data;
         let decodedInst = decodeInst(instr);
         decodeKonata(lfh, current_id);
-        // labelKonataLeft(lfh, current_id, $format("Instr bits: %x", decodedInst.inst));
+        labelKonataLeft(lfh, current_id, $format("Instr bits: %x", decodedInst.inst));
         if (debug) $display("[Decode] ", fshow(decodedInst));
         let rs1_idx = getInstFields(instr).rs1;
         let rs2_idx = getInstFields(instr).rs2;
@@ -155,7 +167,7 @@ module mkpipelined(RVIfc);
         //  labelKonataLeft(lfh,from_fetch.k_id, $format("Any information you would like to put in the left pane in Konata, attached to the current instruction"));
     endrule
 
-    rule execute if (!starting);
+    rule execute if (!starting && systolic == 0);
         // TODO
         let x = d2e.first();
         d2e.deq();
@@ -169,6 +181,7 @@ module mkpipelined(RVIfc);
         if (x.epoch == epoch[1]) begin
             if (debug) $display("[Execute] ", fshow(dInst));
             executeKonata(lfh, current_id);
+            labelKonataLeft(lfh, current_id, $format(" Execute "));
             let imm = getImmediate(dInst);
             Bool mmio = False;
             let data = execALU32(dInst.inst, rv1, rv2, imm, pc);
@@ -177,7 +190,14 @@ module mkpipelined(RVIfc);
             let size = funct3[1:0];
             let addr = rv1 + imm;
             Bit#(2) offset = addr[1:0];
-            if (isMemoryInst(dInst)) begin
+            if (isSysInst(dInst)) begin
+                labelKonataLeft(lfh, current_id, $format(" Systolic ", rv1, rv2));
+                let req = CacheLine {addr : {rv1[31:2] + 30'b10000, 2'b0},
+                        data : ?};
+                toCache.enq(req);
+                systolic <= 1;
+                addr2 <= rv2 + 32'b1000000;
+            end else if (isMemoryInst(dInst)) begin
                 // Technical details for load byte/halfword/word
                 let shift_amount = {offset, 3'b0};
                 let byte_en = 0;
@@ -246,7 +266,35 @@ module mkpipelined(RVIfc);
         // This will allow Konata to display those instructions in grey
     endrule
 
-    rule writeback if (!starting);
+    rule fetchLine if (systolic == 1);
+        let resp = ?;
+        resp = fromCache.first();
+        fromCache.deq();
+        matrix1 <= resp.data;
+        let req = CacheLine {addr : {addr2[31:2], 2'b0},
+                data : ?};
+        toCache.enq(req);
+        systolic <= 2;
+    endrule
+
+    rule loadMatrix if (systolic == 2);
+        let resp = ?;
+        resp = fromCache.first();
+        fromCache.deq();
+        systolic <= 3;
+        $display("Fetched");
+        $display("x1 %x", matrix1);
+        $display("x2 %x", resp.data);
+        arr.loadDataA(matrix1);
+        arr.loadDataB(resp.data);
+    endrule
+
+    rule computeMatrix if (systolic == 3);
+        arr.init();
+        systolic <= 0;
+    endrule
+
+    rule writeback if (!starting && systolic == 0);
         // TODO
         let x = e2w.first();
         e2w.deq();
@@ -257,9 +305,13 @@ module mkpipelined(RVIfc);
         let mem_business = x.mem_business;
 
         writebackKonata(lfh, current_id);
+        labelKonataLeft(lfh, current_id, $format(" Writeback "));
         retired.enq(current_id);
         let fields = getInstFields(dInst.inst);
-        if (isMemoryInst(dInst)) begin // (* // write_val *)
+        if (isSysInst(dInst)) begin
+            let resp = arr.getResults();
+            $display("Systolic Done %x", resp);
+        end else if (isMemoryInst(dInst)) begin // (* // write_val *)
             let resp = ?;
 		    if (mem_business.mmio) begin 
                 resp = fromMMIO.first();
@@ -347,5 +399,12 @@ module mkpipelined(RVIfc);
     endmethod
     method Action getMMIOResp(Mem a);
 		fromMMIO.enq(a);
+    endmethod
+    method ActionValue#(CacheLine) getCacheLineReq();
+		toCache.deq();
+		return toCache.first();
+    endmethod
+    method Action getCacheLineResp(CacheLine a);
+		fromCache.enq(a);
     endmethod
 endmodule

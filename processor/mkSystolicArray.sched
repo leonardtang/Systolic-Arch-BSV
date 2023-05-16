@@ -1,0 +1,275 @@
+=== Generated schedule for mkSystolicArray ===
+
+Method schedule
+---------------
+Method: init
+Ready signal: array_0_0.RDY_set_total_iter &&
+	      array_0_1.RDY_set_total_iter &&
+	      array_0_2.RDY_set_total_iter &&
+	      array_0_3.RDY_set_total_iter &&
+	      array_1_0.RDY_set_total_iter &&
+	      array_1_1.RDY_set_total_iter &&
+	      array_1_2.RDY_set_total_iter &&
+	      array_1_3.RDY_set_total_iter &&
+	      array_2_0.RDY_set_total_iter &&
+	      array_2_1.RDY_set_total_iter &&
+	      array_2_2.RDY_set_total_iter &&
+	      array_2_3.RDY_set_total_iter &&
+	      array_3_0.RDY_set_total_iter &&
+	      array_3_1.RDY_set_total_iter &&
+	      array_3_2.RDY_set_total_iter &&
+	      array_3_3.RDY_set_total_iter &&
+	      array_0_0.RDY_init_pe &&
+	      array_0_1.RDY_init_pe &&
+	      array_0_2.RDY_init_pe &&
+	      array_0_3.RDY_init_pe &&
+	      array_1_0_RDY_init_pe____d777(...) &&
+	      array_1_1_RDY_init_pe__78_AND_array_1_2_RDY_in_ETC___d799(...)
+Sequenced after: getResults
+Conflicts: init, loadDataA, loadDataB
+ 
+Method: loadDataA
+Ready signal: ready
+Conflict-free: loadDataB, getResults
+Sequenced before (restricted): loadDataA
+Conflicts: init
+ 
+Method: loadDataB
+Ready signal: ready
+Conflict-free: loadDataA, getResults
+Sequenced before (restricted): loadDataB
+Conflicts: init
+ 
+Method: getResults
+Ready signal: ready
+Conflict-free: loadDataA, loadDataB, getResults
+Sequenced before: init
+ 
+Rule schedule
+-------------
+Rule: top_0_0_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_0_1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_0_2_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_0_3_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_1_0_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_1_1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_1_2_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_1_3_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_2_0_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_2_1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_2_2_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_2_3_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_3_0_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_3_1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_3_2_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: top_3_3_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_0_0_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_0_1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_0_2_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_0_3_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_1_0_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_1_1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_1_2_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_1_3_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_2_0_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_2_1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_2_2_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_2_3_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_3_0_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_3_1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_3_2_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: left_3_3_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: countCycles
+Predicate: (count .< 32'd50) && (! ready)
+Blocking rules: (none)
+ 
+Rule: set_outfile
+Predicate: ! file_valid
+Blocking rules: (none)
+ 
+Rule: pulse_data
+Predicate: (! ready) && (pe_iter_num .< 32'd11) && (pe_state == pe_iter_num)
+Blocking rules: (none)
+ 
+Rule: pe_put
+Predicate: array_0_0.RDY_flow_left &&
+	   array_0_1.RDY_flow_left &&
+	   array_0_2.RDY_flow_left &&
+	   array_0_3.RDY_flow_left &&
+	   array_1_0.RDY_flow_left &&
+	   array_1_1.RDY_flow_left &&
+	   array_1_2.RDY_flow_left &&
+	   array_1_3.RDY_flow_left &&
+	   array_2_0.RDY_flow_left &&
+	   array_2_1.RDY_flow_left &&
+	   array_2_2.RDY_flow_left &&
+	   array_2_3.RDY_flow_left &&
+	   array_3_0.RDY_flow_left &&
+	   array_3_1.RDY_flow_left &&
+	   array_3_2.RDY_flow_left &&
+	   array_3_3.RDY_flow_left &&
+	   array_0_0.RDY_flow_top &&
+	   array_0_1.RDY_flow_top &&
+	   array_0_2_RDY_flow_top____d571(...) &&
+	   array_0_3_RDY_flow_top__72_AND_array_1_0_RDY_f_ETC___d596(...) &&
+	   (! ready) && (pe_iter_num .< 32'd11)
+Blocking rules: (none)
+ 
+Rule: pe_compute
+Predicate: array_0_0.RDY_get_output &&
+	   array_0_1.RDY_get_output &&
+	   array_0_2.RDY_get_output &&
+	   array_0_3.RDY_get_output &&
+	   array_1_0.RDY_get_output &&
+	   array_1_1.RDY_get_output &&
+	   array_1_2.RDY_get_output &&
+	   array_1_3.RDY_get_output &&
+	   array_2_0.RDY_get_output &&
+	   array_2_1.RDY_get_output &&
+	   array_2_2.RDY_get_output &&
+	   array_2_3.RDY_get_output &&
+	   array_3_0.RDY_get_output &&
+	   array_3_1.RDY_get_output &&
+	   array_3_2.RDY_get_output && array_3_3.RDY_get_output &&
+	   (! ready) && (pe_iter_num == 32'd11)
+Blocking rules: (none)
+ 
+Logical execution order: loadDataA,
+			 loadDataB,
+			 getResults,
+			 init,
+			 countCycles,
+			 pulse_data,
+			 pe_put,
+			 pe_compute,
+			 set_outfile,
+			 top_0_0_canonicalize,
+			 top_0_1_canonicalize,
+			 top_0_2_canonicalize,
+			 top_0_3_canonicalize,
+			 top_1_0_canonicalize,
+			 top_1_1_canonicalize,
+			 top_1_2_canonicalize,
+			 top_1_3_canonicalize,
+			 top_2_0_canonicalize,
+			 top_2_1_canonicalize,
+			 top_2_2_canonicalize,
+			 top_2_3_canonicalize,
+			 top_3_0_canonicalize,
+			 top_3_1_canonicalize,
+			 top_3_2_canonicalize,
+			 top_3_3_canonicalize,
+			 left_0_0_canonicalize,
+			 left_0_1_canonicalize,
+			 left_0_2_canonicalize,
+			 left_0_3_canonicalize,
+			 left_1_0_canonicalize,
+			 left_1_1_canonicalize,
+			 left_1_2_canonicalize,
+			 left_1_3_canonicalize,
+			 left_2_0_canonicalize,
+			 left_2_1_canonicalize,
+			 left_2_2_canonicalize,
+			 left_2_3_canonicalize,
+			 left_3_0_canonicalize,
+			 left_3_1_canonicalize,
+			 left_3_2_canonicalize,
+			 left_3_3_canonicalize
+
+===============================================

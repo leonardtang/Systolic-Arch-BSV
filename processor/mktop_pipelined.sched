@@ -842,7 +842,7 @@ Predicate: cache_stb.i_notEmpty &&
 	      ? ! cache_lockL1_port_0.wget
 	      : (! cache_lockL1_register)
 	    : (_ :: Bit 1))
-Blocking rules: requestD
+Blocking rules: requestLine, requestD
  
 Rule: cache_clearL1Lock
 Predicate: True
@@ -850,6 +850,14 @@ Blocking rules: (none)
  
 Rule: cache_stbRead
 Predicate: (! cache_hitQ_rv.port0__read[32]) && (cache_mshr == 3'd5)
+Blocking rules: (none)
+ 
+Rule: cache_readLine
+Predicate: cache_cache_serverAdapterB_outData_beforeDeq.read &&
+	   (cache_cache_serverAdapterB_outData_ff.i_notEmpty ||
+	    cache_cache_serverAdapterB_outData_enqw.whas) &&
+	   (! cache_hitLineQ_rv.port0__read[512]) &&
+	   (cache_mshr == 3'd6)
 Blocking rules: (none)
  
 Rule: icache_cache_serverAdapterA_outData_enqueue
@@ -1628,6 +1636,14 @@ Rule: icache_stbRead
 Predicate: (! icache_hitQ_rv.port0__read[32]) && (icache_mshr == 3'd5)
 Blocking rules: (none)
  
+Rule: icache_readLine
+Predicate: icache_cache_serverAdapterB_outData_beforeDeq.read &&
+	   (icache_cache_serverAdapterB_outData_ff.i_notEmpty ||
+	    icache_cache_serverAdapterB_outData_enqw.whas) &&
+	   (! icache_hitLineQ_rv.port0__read[512]) &&
+	   (icache_mshr == 3'd6)
+Blocking rules: (none)
+ 
 Rule: mainMem_bram_serverAdapter_outData_enqueue
 Predicate: mainMem_bram_serverAdapter_outData_enqw.whas &&
 	   ((! mainMem_bram_serverAdapter_outData_dequeueing.whas) ||
@@ -1664,162 +1680,6 @@ Predicate: mainMem_bram_serverAdapter_s1[1] &&
 	   ((! mainMem_bram_serverAdapter_outData_beforeEnq.read) ||
 	    (! mainMem_bram_serverAdapter_outData_beforeDeq.read) ||
 	    (! mainMem_bram_serverAdapter_outData_ff.i_notFull))
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_1
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_2
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_3
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_4
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_5
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_6
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_7
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_8
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_9
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_10
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_11
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_12
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_13
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_14
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_15
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_16
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_17
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_18
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_19
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_20
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_21
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_22
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_23
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_24
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_25
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_26
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_27
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_28
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_29
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_30
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_31
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_32
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_33
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_34
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_35
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_36
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_37
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainMem_dl_try_move_38
-Predicate: True
 Blocking rules: (none)
  
 Rule: mainMem_deq
@@ -1867,162 +1727,6 @@ Predicate: mainIMem_bram_serverAdapter_s1[1] &&
 	    (! mainIMem_bram_serverAdapter_outData_ff.i_notFull))
 Blocking rules: (none)
  
-Rule: mainIMem_dl_try_move
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_1
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_2
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_3
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_4
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_5
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_6
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_7
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_8
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_9
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_10
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_11
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_12
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_13
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_14
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_15
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_16
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_17
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_18
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_19
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_20
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_21
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_22
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_23
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_24
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_25
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_26
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_27
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_28
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_29
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_30
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_31
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_32
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_33
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_34
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_35
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_36
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_37
-Predicate: True
-Blocking rules: (none)
- 
-Rule: mainIMem_dl_try_move_38
-Predicate: True
-Blocking rules: (none)
- 
 Rule: mainIMem_deq
 Predicate: mainIMem_bram_serverAdapter_outData_beforeDeq.read &&
 	   (mainIMem_bram_serverAdapter_outData_ff.i_notEmpty ||
@@ -2040,7 +1744,7 @@ Predicate: cache_memReqQ.i_notEmpty &&
 Blocking rules: (none)
  
 Rule: connectDramCache
-Predicate: mainMem_dl_d_39_rv.port0__read[512] && cache_memRespQ.i_notFull
+Predicate: mainMem_dl_d_0_rv.port0__read[512] && cache_memRespQ.i_notFull
 Blocking rules: (none)
  
 Rule: connectICacheDram
@@ -2049,7 +1753,7 @@ Predicate: icache_memReqQ.i_notEmpty &&
 Blocking rules: (none)
  
 Rule: connectIDramCache
-Predicate: mainIMem_dl_d_39_rv.port0__read[512] && icache_memRespQ.i_notFull
+Predicate: mainIMem_dl_d_0_rv.port0__read[512] && icache_memRespQ.i_notFull
 Blocking rules: (none)
  
 Rule: requestI
@@ -2074,6 +1778,16 @@ Blocking rules: (none)
  
 Rule: responseD
 Predicate: cache_hitQ_rv.port1__read[32] && rv_core.RDY_getDResp
+Blocking rules: (none)
+ 
+Rule: requestLine
+Predicate: (cache_mshr == 3'd0) &&
+	   rv_core.RDY_getCacheLineReq &&
+	   (cache_cache_serverAdapterB_cnt .< 3'd3)
+Blocking rules: requestD
+ 
+Rule: responseLine
+Predicate: cache_hitLineQ_rv.port1__read[512] && rv_core.RDY_getCacheLineResp
 Blocking rules: (none)
  
 Rule: requestMMIO
@@ -2114,16 +1828,19 @@ Logical execution order: tic,
 			 responseD,
 			 requestD,
 			 requestMMIO,
+			 cache_cache_serverAdapterA_outData_enqueue,
+			 cache_cache_serverAdapterA_outData_dequeue,
+			 cache_cache_serverAdapterB_overRun,
+			 cache_cache_serverAdapterB_moveToOutFIFO,
+			 cache_readLine,
+			 responseLine,
+			 requestLine,
 			 cache_mvStbToL1,
 			 cache_clearL1Lock,
 			 cache_cache_serverAdapterA_stageReadResponseAlways,
-			 cache_cache_serverAdapterA_outData_enqueue,
-			 cache_cache_serverAdapterA_outData_dequeue,
 			 cache_cache_serverAdapterA_cnt_finalAdd,
 			 cache_cache_serverAdapterA_s1__dreg_update,
 			 cache_cache_serverAdapterB_stageReadResponseAlways,
-			 cache_cache_serverAdapterB_overRun,
-			 cache_cache_serverAdapterB_moveToOutFIFO,
 			 cache_cache_serverAdapterB_outData_enqueue,
 			 cache_cache_serverAdapterB_outData_dequeue,
 			 cache_cache_serverAdapterB_cnt_finalAdd,
@@ -2148,6 +1865,7 @@ Logical execution order: tic,
 			 icache_cache_serverAdapterB_stageReadResponseAlways,
 			 icache_cache_serverAdapterB_overRun,
 			 icache_cache_serverAdapterB_moveToOutFIFO,
+			 icache_readLine,
 			 icache_cache_serverAdapterB_outData_enqueue,
 			 icache_cache_serverAdapterB_outData_dequeue,
 			 icache_cache_serverAdapterB_cnt_finalAdd,
@@ -2156,96 +1874,18 @@ Logical execution order: tic,
 			 mainMem_bram_serverAdapter_stageReadResponseAlways,
 			 mainMem_bram_serverAdapter_overRun,
 			 mainMem_bram_serverAdapter_moveToOutFIFO,
-			 mainMem_bram_serverAdapter_s1__dreg_update,
-			 mainMem_dl_try_move,
-			 mainMem_dl_try_move_1,
-			 mainMem_dl_try_move_2,
-			 mainMem_dl_try_move_3,
-			 mainMem_dl_try_move_4,
-			 mainMem_dl_try_move_5,
-			 mainMem_dl_try_move_6,
-			 mainMem_dl_try_move_7,
-			 mainMem_dl_try_move_8,
-			 mainMem_dl_try_move_9,
-			 mainMem_dl_try_move_10,
-			 mainMem_dl_try_move_11,
-			 mainMem_dl_try_move_12,
-			 mainMem_dl_try_move_13,
-			 mainMem_dl_try_move_14,
-			 mainMem_dl_try_move_15,
-			 mainMem_dl_try_move_16,
-			 mainMem_dl_try_move_17,
-			 mainMem_dl_try_move_18,
-			 mainMem_dl_try_move_19,
-			 mainMem_dl_try_move_20,
-			 mainMem_dl_try_move_21,
-			 mainMem_dl_try_move_22,
-			 mainMem_dl_try_move_23,
-			 mainMem_dl_try_move_24,
-			 mainMem_dl_try_move_25,
-			 mainMem_dl_try_move_26,
-			 mainMem_dl_try_move_27,
-			 mainMem_dl_try_move_28,
-			 mainMem_dl_try_move_29,
-			 mainMem_dl_try_move_30,
-			 mainMem_dl_try_move_31,
-			 mainMem_dl_try_move_32,
-			 mainMem_dl_try_move_33,
-			 mainMem_dl_try_move_34,
-			 mainMem_dl_try_move_35,
-			 mainMem_dl_try_move_36,
-			 mainMem_dl_try_move_37,
-			 mainMem_dl_try_move_38,
 			 mainMem_deq,
 			 mainMem_bram_serverAdapter_outData_enqueue,
 			 mainMem_bram_serverAdapter_outData_dequeue,
 			 mainMem_bram_serverAdapter_cnt_finalAdd,
+			 mainMem_bram_serverAdapter_s1__dreg_update,
 			 mainIMem_bram_serverAdapter_stageReadResponseAlways,
 			 mainIMem_bram_serverAdapter_overRun,
 			 mainIMem_bram_serverAdapter_moveToOutFIFO,
-			 mainIMem_bram_serverAdapter_s1__dreg_update,
-			 mainIMem_dl_try_move,
-			 mainIMem_dl_try_move_1,
-			 mainIMem_dl_try_move_2,
-			 mainIMem_dl_try_move_3,
-			 mainIMem_dl_try_move_4,
-			 mainIMem_dl_try_move_5,
-			 mainIMem_dl_try_move_6,
-			 mainIMem_dl_try_move_7,
-			 mainIMem_dl_try_move_8,
-			 mainIMem_dl_try_move_9,
-			 mainIMem_dl_try_move_10,
-			 mainIMem_dl_try_move_11,
-			 mainIMem_dl_try_move_12,
-			 mainIMem_dl_try_move_13,
-			 mainIMem_dl_try_move_14,
-			 mainIMem_dl_try_move_15,
-			 mainIMem_dl_try_move_16,
-			 mainIMem_dl_try_move_17,
-			 mainIMem_dl_try_move_18,
-			 mainIMem_dl_try_move_19,
-			 mainIMem_dl_try_move_20,
-			 mainIMem_dl_try_move_21,
-			 mainIMem_dl_try_move_22,
-			 mainIMem_dl_try_move_23,
-			 mainIMem_dl_try_move_24,
-			 mainIMem_dl_try_move_25,
-			 mainIMem_dl_try_move_26,
-			 mainIMem_dl_try_move_27,
-			 mainIMem_dl_try_move_28,
-			 mainIMem_dl_try_move_29,
-			 mainIMem_dl_try_move_30,
-			 mainIMem_dl_try_move_31,
-			 mainIMem_dl_try_move_32,
-			 mainIMem_dl_try_move_33,
-			 mainIMem_dl_try_move_34,
-			 mainIMem_dl_try_move_35,
-			 mainIMem_dl_try_move_36,
-			 mainIMem_dl_try_move_37,
-			 mainIMem_dl_try_move_38,
 			 mainIMem_deq,
 			 mainIMem_bram_serverAdapter_outData_enqueue,
 			 mainIMem_bram_serverAdapter_outData_dequeue,
-			 mainIMem_bram_serverAdapter_cnt_finalAdd
+			 mainIMem_bram_serverAdapter_cnt_finalAdd,
+			 mainIMem_bram_serverAdapter_s1__dreg_update
 
 ===============================================
